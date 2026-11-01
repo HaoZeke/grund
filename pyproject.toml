@@ -1,0 +1,16 @@
+[project]
+name = "grund"
+version = "0.1.0"
+description = "Grounded natural-language answers over Statistics Iceland PxWeb tables"
+requires-python = ">=3.11"
+authors = [{ name = "Rohit Goswami", email = "rgoswami@ieee.org" }]
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["indexer", "evalset", "rails", "app", "lang"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100

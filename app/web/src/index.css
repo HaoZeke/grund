@@ -1,0 +1,66 @@
+@import "tailwindcss";
+@import "@fontsource/fraunces/600.css";
+@import "@fontsource/public-sans/400.css";
+@import "@fontsource/public-sans/600.css";
+
+@theme {
+  --font-serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Public Sans", "Helvetica Neue", sans-serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+.break-anywhere {
+  overflow-wrap: anywhere;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 1px 1px, rgb(20 61 102 / 0.05) 1px, transparent 0) 0 0 / 18px 18px,
+    #e7e1d6;
+  color: #1c1915;
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: #8f1d2c;
+  color: #f6f1e7;
+}
+
+.grund-wait {
+  height: 4px;
+  background: #e4dccc;
+  overflow: hidden;
+}
+
+.grund-wait > span {
+  display: block;
+  height: 100%;
+  width: 35%;
+  background: #143d66;
+  animation: grund-slide 1.6s ease-in-out infinite;
+}
+
+@keyframes grund-slide {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grund-wait > span {
+    animation: none;
+    width: 100%;
+  }
+}
+
+dialog {
+  color: #1c1915;
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+}

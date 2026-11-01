@@ -1,0 +1,10 @@
+{"id": "extra-fer90001-en", "language": "en", "question": "How many passengers went through Keflavik airport by month in 2020?", "parts": [{"table": "FER90001"}]}
+{"id": "extra-fer90001-is", "language": "is", "question": "Hve margir farþegar fóru um Keflavíkurflugvöll eftir mánuðum árið 2020?", "parts": [{"table": "FER90001"}]}
+{"id": "extra-pen01101-en", "language": "en", "question": "What was the weighted average interest rate of commercial banks in 2010?", "parts": [{"table": "PEN01101"}]}
+{"id": "extra-pen01101-is", "language": "is", "question": "Hverjir voru vegnir meðalársvextir innlánsstofnana árið 2010?", "parts": [{"table": "PEN01101"}]}
+{"id": "extra-cen0001-en", "language": "en", "question": "What was the census population by sex, age and municipality in 1981?", "parts": [{"table": "CEN0001"}]}
+{"id": "extra-cen0001-is", "language": "is", "question": "Hver var manntal mannfjöldans eftir kyni, aldri og sveitarfélagi árið 1981?", "parts": [{"table": "CEN0001"}]}
+{"id": "extra-dom0501-en", "language": "en", "question": "How many offenses were registered by the police in 2010?", "parts": [{"table": "DOM0501"}]}
+{"id": "extra-dom0501-is", "language": "is", "question": "Hver var fjöldi skráðra afbrota árið 2010?", "parts": [{"table": "DOM0501"}]}
+{"id": "extra-idn02100-en", "language": "en", "question": "What was the installed capacity and generation in public power plants in 1970?", "parts": [{"table": "IDN02100"}]}
+{"id": "extra-idn02100-is", "language": "is", "question": "Hvert var afl og orkuvinnsla almenningsrafstöðva árið 1970?", "parts": [{"table": "IDN02100"}]}

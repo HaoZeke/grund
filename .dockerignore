@@ -1,0 +1,12 @@
+.git
+**/__pycache__
+**/*.pyc
+.venv
+node_modules
+app/web/node_modules
+app/web/dist
+data/models
+data/cache
+data/index-lang
+vendor
+**/*.log

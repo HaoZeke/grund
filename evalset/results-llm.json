@@ -1,0 +1,2462 @@
+{
+  "grund": {
+    "n": 91,
+    "answerable": {
+      "n": 78,
+      "table": {
+        "n": 78,
+        "successes": 38,
+        "accuracy": 0.48717948717948717,
+        "wilson95": [
+          0.37948764475056745,
+          0.5960749053462049
+        ]
+      },
+      "value": {
+        "n": 78,
+        "successes": 27,
+        "accuracy": 0.34615384615384615,
+        "wilson95": [
+          0.25005047365684197,
+          0.4567001275044257
+        ]
+      },
+      "citation": {
+        "n": 78,
+        "successes": 27,
+        "accuracy": 0.34615384615384615,
+        "wilson95": [
+          0.25005047365684197,
+          0.4567001275044257
+        ]
+      },
+      "refusal": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      }
+    },
+    "withheld": {
+      "n": 13,
+      "table": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "value": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "citation": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "refusal": {
+        "n": 13,
+        "successes": 9,
+        "accuracy": 0.6923076923076923,
+        "wilson95": [
+          0.4236888781333764,
+          0.8731950283838191
+        ]
+      }
+    },
+    "hag_scope": {
+      "n": 10,
+      "table": {
+        "n": 7,
+        "successes": 4,
+        "accuracy": 0.5714285714285714,
+        "wilson95": [
+          0.2504542304090258,
+          0.8417830777373732
+        ]
+      },
+      "value": {
+        "n": 7,
+        "successes": 3,
+        "accuracy": 0.42857142857142855,
+        "wilson95": [
+          0.15821692226262685,
+          0.7495457695909742
+        ]
+      },
+      "citation": {
+        "n": 7,
+        "successes": 3,
+        "accuracy": 0.42857142857142855,
+        "wilson95": [
+          0.15821692226262685,
+          0.7495457695909742
+        ]
+      },
+      "refusal": {
+        "n": 3,
+        "successes": 2,
+        "accuracy": 0.6666666666666666,
+        "wilson95": [
+          0.2076549551264879,
+          0.9385096847238394
+        ]
+      }
+    },
+    "beyond_hag": {
+      "n": 81,
+      "table": {
+        "n": 71,
+        "successes": 34,
+        "accuracy": 0.4788732394366197,
+        "wilson95": [
+          0.36677330370106553,
+          0.5931420374995502
+        ]
+      },
+      "value": {
+        "n": 71,
+        "successes": 24,
+        "accuracy": 0.3380281690140845,
+        "wilson95": [
+          0.2388482890600142,
+          0.4538359934780396
+        ]
+      },
+      "citation": {
+        "n": 71,
+        "successes": 24,
+        "accuracy": 0.3380281690140845,
+        "wilson95": [
+          0.2388482890600142,
+          0.4538359934780396
+        ]
+      },
+      "refusal": {
+        "n": 10,
+        "successes": 7,
+        "accuracy": 0.7,
+        "wilson95": [
+          0.39677321997956516,
+          0.892210712513788
+        ]
+      }
+    },
+    "by_stratum": {
+      "clarify": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        }
+      },
+      "latest": {
+        "table": {
+          "n": 8,
+          "successes": 4,
+          "accuracy": 0.5,
+          "wilson95": [
+            0.21521252682444186,
+            0.7847874731755582
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 3,
+          "accuracy": 0.375,
+          "wilson95": [
+            0.13684175946152105,
+            0.6942621454161981
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 3,
+          "accuracy": 0.375,
+          "wilson95": [
+            0.13684175946152105,
+            0.6942621454161981
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "level": {
+        "table": {
+          "n": 36,
+          "successes": 23,
+          "accuracy": 0.6388888888888888,
+          "wilson95": [
+            0.4757478039083198,
+            0.7752461320781867
+          ]
+        },
+        "value": {
+          "n": 36,
+          "successes": 15,
+          "accuracy": 0.4166666666666667,
+          "wilson95": [
+            0.2714033350508729,
+            0.5780003033572231
+          ]
+        },
+        "citation": {
+          "n": 36,
+          "successes": 15,
+          "accuracy": 0.4166666666666667,
+          "wilson95": [
+            0.2714033350508729,
+            0.5780003033572231
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "paraphrase": {
+        "table": {
+          "n": 3,
+          "successes": 2,
+          "accuracy": 0.6666666666666666,
+          "wilson95": [
+            0.2076549551264879,
+            0.9385096847238394
+          ]
+        },
+        "value": {
+          "n": 3,
+          "successes": 1,
+          "accuracy": 0.3333333333333333,
+          "wilson95": [
+            0.0614903152761605,
+            0.7923450448735121
+          ]
+        },
+        "citation": {
+          "n": 3,
+          "successes": 1,
+          "accuracy": 0.3333333333333333,
+          "wilson95": [
+            0.0614903152761605,
+            0.7923450448735121
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "rebase": {
+        "table": {
+          "n": 5,
+          "successes": 1,
+          "accuracy": 0.2,
+          "wilson95": [
+            0.03622316096978745,
+            0.6244717358814613
+          ]
+        },
+        "value": {
+          "n": 5,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.43449149475208104
+          ]
+        },
+        "citation": {
+          "n": 5,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.43449149475208104
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "share": {
+        "table": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "value": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "citation": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "unanswerable": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 10,
+          "successes": 9,
+          "accuracy": 0.9,
+          "wilson95": [
+            0.5958436145024278,
+            0.9821242504842788
+          ]
+        }
+      },
+      "yoy_computed": {
+        "table": {
+          "n": 8,
+          "successes": 3,
+          "accuracy": 0.375,
+          "wilson95": [
+            0.13684175946152105,
+            0.6942621454161981
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 3,
+          "accuracy": 0.375,
+          "wilson95": [
+            0.13684175946152105,
+            0.6942621454161981
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 3,
+          "accuracy": 0.375,
+          "wilson95": [
+            0.13684175946152105,
+            0.6942621454161981
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "yoy_official": {
+        "table": {
+          "n": 8,
+          "successes": 5,
+          "accuracy": 0.625,
+          "wilson95": [
+            0.30573785458380187,
+            0.863158240538479
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 5,
+          "accuracy": 0.625,
+          "wilson95": [
+            0.30573785458380187,
+            0.863158240538479
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 5,
+          "accuracy": 0.625,
+          "wilson95": [
+            0.30573785458380187,
+            0.863158240538479
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      }
+    }
+  },
+  "naive_bm25": {
+    "n": 91,
+    "answerable": {
+      "n": 78,
+      "table": {
+        "n": 78,
+        "successes": 63,
+        "accuracy": 0.8076923076923077,
+        "wilson95": [
+          0.7066498081657022,
+          0.8798489895117625
+        ]
+      },
+      "value": {
+        "n": 78,
+        "successes": 6,
+        "accuracy": 0.07692307692307693,
+        "wilson95": [
+          0.03572997725324493,
+          0.15783417594024104
+        ]
+      },
+      "citation": {
+        "n": 78,
+        "successes": 6,
+        "accuracy": 0.07692307692307693,
+        "wilson95": [
+          0.03572997725324493,
+          0.15783417594024104
+        ]
+      },
+      "refusal": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      }
+    },
+    "withheld": {
+      "n": 13,
+      "table": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "value": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "citation": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "refusal": {
+        "n": 13,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.22810184305529166
+        ]
+      }
+    },
+    "hag_scope": {
+      "n": 10,
+      "table": {
+        "n": 7,
+        "successes": 3,
+        "accuracy": 0.42857142857142855,
+        "wilson95": [
+          0.15821692226262685,
+          0.7495457695909742
+        ]
+      },
+      "value": {
+        "n": 7,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.35433884297520657
+        ]
+      },
+      "citation": {
+        "n": 7,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.35433884297520657
+        ]
+      },
+      "refusal": {
+        "n": 3,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.5615060804490177
+        ]
+      }
+    },
+    "beyond_hag": {
+      "n": 81,
+      "table": {
+        "n": 71,
+        "successes": 60,
+        "accuracy": 0.8450704225352113,
+        "wilson95": [
+          0.7434882267163929,
+          0.9112278670068841
+        ]
+      },
+      "value": {
+        "n": 71,
+        "successes": 6,
+        "accuracy": 0.08450704225352113,
+        "wilson95": [
+          0.039305972354112026,
+          0.17236240459133007
+        ]
+      },
+      "citation": {
+        "n": 71,
+        "successes": 6,
+        "accuracy": 0.08450704225352113,
+        "wilson95": [
+          0.039305972354112026,
+          0.17236240459133007
+        ]
+      },
+      "refusal": {
+        "n": 10,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.2775401687666166
+        ]
+      }
+    },
+    "by_stratum": {
+      "clarify": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        }
+      },
+      "latest": {
+        "table": {
+          "n": 8,
+          "successes": 7,
+          "accuracy": 0.875,
+          "wilson95": [
+            0.5291051942301386,
+            0.9775830911367038
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "level": {
+        "table": {
+          "n": 36,
+          "successes": 31,
+          "accuracy": 0.8611111111111112,
+          "wilson95": [
+            0.7134014871960681,
+            0.9391827463688489
+          ]
+        },
+        "value": {
+          "n": 36,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.09642183044857634
+          ]
+        },
+        "citation": {
+          "n": 36,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.09642183044857634
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "paraphrase": {
+        "table": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        },
+        "value": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        },
+        "citation": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "rebase": {
+        "table": {
+          "n": 5,
+          "successes": 1,
+          "accuracy": 0.2,
+          "wilson95": [
+            0.03622316096978745,
+            0.6244717358814613
+          ]
+        },
+        "value": {
+          "n": 5,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.43449149475208104
+          ]
+        },
+        "citation": {
+          "n": 5,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.43449149475208104
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "share": {
+        "table": {
+          "n": 10,
+          "successes": 8,
+          "accuracy": 0.8,
+          "wilson95": [
+            0.49015684672072335,
+            0.9433190520193067
+          ]
+        },
+        "value": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "citation": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "unanswerable": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        }
+      },
+      "yoy_computed": {
+        "table": {
+          "n": 8,
+          "successes": 8,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.6755843804891231,
+            1.0
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "yoy_official": {
+        "table": {
+          "n": 8,
+          "successes": 8,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.6755843804891231,
+            1.0
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      }
+    }
+  },
+  "plain_llm": {
+    "n": 91,
+    "answerable": {
+      "n": 78,
+      "table": {
+        "n": 78,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.04693945377411976
+        ]
+      },
+      "value": {
+        "n": 78,
+        "successes": 1,
+        "accuracy": 0.01282051282051282,
+        "wilson95": [
+          0.0022666733888537863,
+          0.06911023028849367
+        ]
+      },
+      "citation": {
+        "n": 78,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.04693945377411976
+        ]
+      },
+      "refusal": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      }
+    },
+    "withheld": {
+      "n": 13,
+      "table": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "value": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "citation": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "refusal": {
+        "n": 13,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.22810184305529166
+        ]
+      }
+    },
+    "hag_scope": {
+      "n": 10,
+      "table": {
+        "n": 7,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.35433884297520657
+        ]
+      },
+      "value": {
+        "n": 7,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.35433884297520657
+        ]
+      },
+      "citation": {
+        "n": 7,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.35433884297520657
+        ]
+      },
+      "refusal": {
+        "n": 3,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.5615060804490177
+        ]
+      }
+    },
+    "beyond_hag": {
+      "n": 81,
+      "table": {
+        "n": 71,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.05132974174790491
+        ]
+      },
+      "value": {
+        "n": 71,
+        "successes": 1,
+        "accuracy": 0.014084507042253521,
+        "wilson95": [
+          0.0024905391347781955,
+          0.07556230847938292
+        ]
+      },
+      "citation": {
+        "n": 71,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.05132974174790491
+        ]
+      },
+      "refusal": {
+        "n": 10,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.2775401687666166
+        ]
+      }
+    },
+    "by_stratum": {
+      "clarify": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        }
+      },
+      "latest": {
+        "table": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "level": {
+        "table": {
+          "n": 36,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.09642183044857634
+          ]
+        },
+        "value": {
+          "n": 36,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.09642183044857634
+          ]
+        },
+        "citation": {
+          "n": 36,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.09642183044857634
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "paraphrase": {
+        "table": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        },
+        "value": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        },
+        "citation": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "rebase": {
+        "table": {
+          "n": 5,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.43449149475208104
+          ]
+        },
+        "value": {
+          "n": 5,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.43449149475208104
+          ]
+        },
+        "citation": {
+          "n": 5,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.43449149475208104
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "share": {
+        "table": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "value": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "citation": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "unanswerable": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        }
+      },
+      "yoy_computed": {
+        "table": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 1,
+          "accuracy": 0.125,
+          "wilson95": [
+            0.02241690886329617,
+            0.4708948057698615
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "yoy_official": {
+        "table": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "q001",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": "llm"
+    },
+    {
+      "id": "q002",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": "llm"
+    },
+    {
+      "id": "q003",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null
+    },
+    {
+      "id": "q004",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": false,
+      "predicted_table": "SAM08050.px",
+      "gold_table": null,
+      "planner": "llm"
+    },
+    {
+      "id": "q005",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null
+    },
+    {
+      "id": "q006",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null
+    },
+    {
+      "id": "q007",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null
+    },
+    {
+      "id": "q008",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null
+    },
+    {
+      "id": "q009",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null
+    },
+    {
+      "id": "q010",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": "llm"
+    },
+    {
+      "id": "q011",
+      "stratum": "clarify",
+      "expect": "clarify",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": false,
+      "predicted_table": "MAN00000.px",
+      "gold_table": null,
+      "planner": "llm"
+    },
+    {
+      "id": "q012",
+      "stratum": "clarify",
+      "expect": "clarify",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": false,
+      "predicted_table": "MAN03200.px",
+      "gold_table": null,
+      "planner": "llm"
+    },
+    {
+      "id": "q013",
+      "stratum": "clarify",
+      "expect": "clarify",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": false,
+      "predicted_table": "VIS01005.px",
+      "gold_table": null,
+      "planner": "llm"
+    },
+    {
+      "id": "q014",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "VIN01201.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q015",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "FYR04202.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q016",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "UMH34065.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q017",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN03301.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q018",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "XLAN10201.px",
+      "gold_table": "XLAN10201.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q019",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LIF03342.px",
+      "gold_table": "LIF03342.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q020",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN02100.px",
+      "gold_table": "VIN02100.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q021",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN00102.px",
+      "gold_table": "MAN00102.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q022",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "VIN01102.px",
+      "gold_table": "VIN01102.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q023",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "IDN02105.px",
+      "gold_table": "IDN02105.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q024",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN02005.px",
+      "planner": "deterministic"
+    },
+    {
+      "id": "q025",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "SKO02302b.px",
+      "gold_table": "SKO02302b.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q026",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "FYR04101.px",
+      "gold_table": "FYR04101.px",
+      "planner": "deterministic"
+    },
+    {
+      "id": "q027",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "UMH04113.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q028",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "MAN09000.px",
+      "gold_table": "MAN09000.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q029",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "UTA04010.px",
+      "gold_table": "UTA04010.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q030",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SJA08101.px",
+      "gold_table": "SJA08101.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q031",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN05331.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q032",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIS01004.px",
+      "gold_table": "VIS01004.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q033",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "IDN03003.px",
+      "gold_table": "IDN03003.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q034",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "UMH53110.px",
+      "gold_table": "UMH53110.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q035",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN00102.px",
+      "gold_table": "MAN00102.px",
+      "planner": "deterministic"
+    },
+    {
+      "id": "q036",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "SOG09009.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q037",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "MEN07004.px",
+      "gold_table": "MEN07004.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q038",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "SAM01202.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q039",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "MAN030101.px",
+      "gold_table": "MAN030101.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q040",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "LIF03322.px",
+      "gold_table": "LIF03322.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q041",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SKO03131.px",
+      "gold_table": "SKO03131.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q042",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "FYR05103.px",
+      "gold_table": "FYR05103.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q043",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "UMH31101.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q044",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN01101.px",
+      "gold_table": "MAN01101.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q045",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "SKO01311.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q046",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SJA05002.px",
+      "gold_table": "SJA05002.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q047",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN05100.px",
+      "gold_table": "MAN05100.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q048",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "THJ06029.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q049",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "SAM08050.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q050",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN05303.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q051",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LAU04005.px",
+      "gold_table": "LAU04005.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q052",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "THJ01103.px",
+      "gold_table": "THJ01103.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q053",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "UMH04102.px",
+      "gold_table": "UMH04102.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q054",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN05101.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q055",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "HEI09410.px",
+      "gold_table": "HEI09409.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q056",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "VIS08010.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q057",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "IDN02102.px",
+      "gold_table": "IDN02102.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q058",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN43004.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q059",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN43000.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q060",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "VIS02000.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q061",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "SJA05001.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q062",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MEN07005.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q063",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN02008.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q064",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "SAM08006.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q065",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "SAM04202.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q066",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "MAN01102.px",
+      "gold_table": "MAN01101.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q067",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN05405.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q068",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "FEL02000.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q069",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIS01000.px",
+      "gold_table": "VIS01000.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q070",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN09012.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q071",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LAU04007.px",
+      "gold_table": "LAU04007.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q072",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN02092.px",
+      "gold_table": "VIN02092.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q073",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN00000.px",
+      "gold_table": "MAN00000.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q074",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "LAU04001.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q075",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "VIS08002.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q076",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "THJ02105.px",
+      "gold_table": "THJ02105.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q077",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "VIS03401.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q078",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "VIS01005.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q079",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "LAU04209.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q080",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "LAU04200.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q081",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "VIN01201.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q082",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "FYR04202.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q083",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN03301.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q084",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "XLAN10201.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q085",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LIF03342.px",
+      "gold_table": "LIF03342.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q086",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN02100.px",
+      "gold_table": "VIN02100.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q087",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "MAN00102.px",
+      "gold_table": "MAN00102.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q088",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN01102.px",
+      "gold_table": "VIN01102.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q089",
+      "stratum": "paraphrase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "VIS01000.px",
+      "gold_table": "VIS01000.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q090",
+      "stratum": "paraphrase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN00101.px",
+      "gold_table": "MAN00101.px",
+      "planner": "llm"
+    },
+    {
+      "id": "q091",
+      "stratum": "paraphrase",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN01102.px",
+      "planner": "llm"
+    }
+  ],
+  "llm": {
+    "enabled": true,
+    "base_url": "http://127.0.0.1:8767/v1",
+    "model": "Qwen2.5-7B-Instruct-Q4_K_M",
+    "quantization": "Q4_K_M",
+    "weights": "bartowski/Qwen2.5-7B-Instruct-GGUF/Qwen2.5-7B-Instruct-Q4_K_M.gguf",
+    "runtime": "llama.cpp b11778, CPU, ctx 8192",
+    "planner": "llm",
+    "prose": false
+  }
+}

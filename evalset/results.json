@@ -1,0 +1,2155 @@
+{
+  "grund": {
+    "n": 91,
+    "answerable": {
+      "n": 78,
+      "table": {
+        "n": 78,
+        "successes": 67,
+        "accuracy": 0.8589743589743589,
+        "wilson95": [
+          0.7648582105386765,
+          0.9193903867516988
+        ]
+      },
+      "value": {
+        "n": 78,
+        "successes": 66,
+        "accuracy": 0.8461538461538461,
+        "wilson95": [
+          0.7500653094405396,
+          0.9097458379466081
+        ]
+      },
+      "citation": {
+        "n": 78,
+        "successes": 64,
+        "accuracy": 0.8205128205128205,
+        "wilson95": [
+          0.7209744070847772,
+          0.8899618404959151
+        ]
+      },
+      "refusal": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      }
+    },
+    "withheld": {
+      "n": 13,
+      "table": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "value": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "citation": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "refusal": {
+        "n": 13,
+        "successes": 9,
+        "accuracy": 0.6923076923076923,
+        "wilson95": [
+          0.4236888781333764,
+          0.8731950283838191
+        ]
+      }
+    },
+    "hag_scope": {
+      "n": 10,
+      "table": {
+        "n": 7,
+        "successes": 7,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.6456611570247934,
+          1.0
+        ]
+      },
+      "value": {
+        "n": 7,
+        "successes": 7,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.6456611570247934,
+          1.0
+        ]
+      },
+      "citation": {
+        "n": 7,
+        "successes": 7,
+        "accuracy": 1.0,
+        "wilson95": [
+          0.6456611570247934,
+          1.0
+        ]
+      },
+      "refusal": {
+        "n": 3,
+        "successes": 2,
+        "accuracy": 0.6666666666666666,
+        "wilson95": [
+          0.2076549551264879,
+          0.9385096847238394
+        ]
+      }
+    },
+    "beyond_hag": {
+      "n": 81,
+      "table": {
+        "n": 71,
+        "successes": 60,
+        "accuracy": 0.8450704225352113,
+        "wilson95": [
+          0.7434882267163929,
+          0.9112278670068841
+        ]
+      },
+      "value": {
+        "n": 71,
+        "successes": 59,
+        "accuracy": 0.8309859154929577,
+        "wilson95": [
+          0.7274065601494254,
+          0.9005864277075953
+        ]
+      },
+      "citation": {
+        "n": 71,
+        "successes": 57,
+        "accuracy": 0.8028169014084507,
+        "wilson95": [
+          0.6958010004492512,
+          0.8787457756752572
+        ]
+      },
+      "refusal": {
+        "n": 10,
+        "successes": 7,
+        "accuracy": 0.7,
+        "wilson95": [
+          0.39677321997956516,
+          0.892210712513788
+        ]
+      }
+    },
+    "by_stratum": {
+      "clarify": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        }
+      },
+      "latest": {
+        "table": {
+          "n": 8,
+          "successes": 7,
+          "accuracy": 0.875,
+          "wilson95": [
+            0.5291051942301386,
+            0.9775830911367038
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 7,
+          "accuracy": 0.875,
+          "wilson95": [
+            0.5291051942301386,
+            0.9775830911367038
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "level": {
+        "table": {
+          "n": 36,
+          "successes": 31,
+          "accuracy": 0.8611111111111112,
+          "wilson95": [
+            0.7134014871960681,
+            0.9391827463688489
+          ]
+        },
+        "value": {
+          "n": 36,
+          "successes": 29,
+          "accuracy": 0.8055555555555556,
+          "wilson95": [
+            0.6497163793648479,
+            0.9024702798054665
+          ]
+        },
+        "citation": {
+          "n": 36,
+          "successes": 29,
+          "accuracy": 0.8055555555555556,
+          "wilson95": [
+            0.6497163793648479,
+            0.9024702798054665
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "paraphrase": {
+        "table": {
+          "n": 3,
+          "successes": 2,
+          "accuracy": 0.6666666666666666,
+          "wilson95": [
+            0.2076549551264879,
+            0.9385096847238394
+          ]
+        },
+        "value": {
+          "n": 3,
+          "successes": 3,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.43849391955098227,
+            1.0
+          ]
+        },
+        "citation": {
+          "n": 3,
+          "successes": 2,
+          "accuracy": 0.6666666666666666,
+          "wilson95": [
+            0.2076549551264879,
+            0.9385096847238394
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "rebase": {
+        "table": {
+          "n": 5,
+          "successes": 5,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.5655085052479191,
+            1.0
+          ]
+        },
+        "value": {
+          "n": 5,
+          "successes": 5,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.5655085052479191,
+            1.0
+          ]
+        },
+        "citation": {
+          "n": 5,
+          "successes": 5,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.5655085052479191,
+            1.0
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "share": {
+        "table": {
+          "n": 10,
+          "successes": 10,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.7224598312333834,
+            1.0
+          ]
+        },
+        "value": {
+          "n": 10,
+          "successes": 10,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.7224598312333834,
+            1.0
+          ]
+        },
+        "citation": {
+          "n": 10,
+          "successes": 10,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.7224598312333834,
+            1.0
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "unanswerable": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 10,
+          "successes": 9,
+          "accuracy": 0.9,
+          "wilson95": [
+            0.5958436145024278,
+            0.9821242504842788
+          ]
+        }
+      },
+      "yoy_computed": {
+        "table": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "yoy_official": {
+        "table": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      }
+    }
+  },
+  "naive_bm25": {
+    "n": 91,
+    "answerable": {
+      "n": 78,
+      "table": {
+        "n": 78,
+        "successes": 63,
+        "accuracy": 0.8076923076923077,
+        "wilson95": [
+          0.7066498081657022,
+          0.8798489895117625
+        ]
+      },
+      "value": {
+        "n": 78,
+        "successes": 6,
+        "accuracy": 0.07692307692307693,
+        "wilson95": [
+          0.03572997725324493,
+          0.15783417594024104
+        ]
+      },
+      "citation": {
+        "n": 78,
+        "successes": 6,
+        "accuracy": 0.07692307692307693,
+        "wilson95": [
+          0.03572997725324493,
+          0.15783417594024104
+        ]
+      },
+      "refusal": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      }
+    },
+    "withheld": {
+      "n": 13,
+      "table": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "value": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "citation": {
+        "n": 0,
+        "successes": 0,
+        "accuracy": null,
+        "wilson95": null
+      },
+      "refusal": {
+        "n": 13,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.22810184305529166
+        ]
+      }
+    },
+    "hag_scope": {
+      "n": 10,
+      "table": {
+        "n": 7,
+        "successes": 3,
+        "accuracy": 0.42857142857142855,
+        "wilson95": [
+          0.15821692226262685,
+          0.7495457695909742
+        ]
+      },
+      "value": {
+        "n": 7,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.35433884297520657
+        ]
+      },
+      "citation": {
+        "n": 7,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.35433884297520657
+        ]
+      },
+      "refusal": {
+        "n": 3,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.5615060804490177
+        ]
+      }
+    },
+    "beyond_hag": {
+      "n": 81,
+      "table": {
+        "n": 71,
+        "successes": 60,
+        "accuracy": 0.8450704225352113,
+        "wilson95": [
+          0.7434882267163929,
+          0.9112278670068841
+        ]
+      },
+      "value": {
+        "n": 71,
+        "successes": 6,
+        "accuracy": 0.08450704225352113,
+        "wilson95": [
+          0.039305972354112026,
+          0.17236240459133007
+        ]
+      },
+      "citation": {
+        "n": 71,
+        "successes": 6,
+        "accuracy": 0.08450704225352113,
+        "wilson95": [
+          0.039305972354112026,
+          0.17236240459133007
+        ]
+      },
+      "refusal": {
+        "n": 10,
+        "successes": 0,
+        "accuracy": 0.0,
+        "wilson95": [
+          0.0,
+          0.2775401687666166
+        ]
+      }
+    },
+    "by_stratum": {
+      "clarify": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        }
+      },
+      "latest": {
+        "table": {
+          "n": 8,
+          "successes": 7,
+          "accuracy": 0.875,
+          "wilson95": [
+            0.5291051942301386,
+            0.9775830911367038
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 6,
+          "accuracy": 0.75,
+          "wilson95": [
+            0.40926987910258916,
+            0.9285223111419724
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "level": {
+        "table": {
+          "n": 36,
+          "successes": 31,
+          "accuracy": 0.8611111111111112,
+          "wilson95": [
+            0.7134014871960681,
+            0.9391827463688489
+          ]
+        },
+        "value": {
+          "n": 36,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.09642183044857634
+          ]
+        },
+        "citation": {
+          "n": 36,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.09642183044857634
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "paraphrase": {
+        "table": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        },
+        "value": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        },
+        "citation": {
+          "n": 3,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.5615060804490177
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "rebase": {
+        "table": {
+          "n": 5,
+          "successes": 1,
+          "accuracy": 0.2,
+          "wilson95": [
+            0.03622316096978745,
+            0.6244717358814613
+          ]
+        },
+        "value": {
+          "n": 5,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.43449149475208104
+          ]
+        },
+        "citation": {
+          "n": 5,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.43449149475208104
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "share": {
+        "table": {
+          "n": 10,
+          "successes": 8,
+          "accuracy": 0.8,
+          "wilson95": [
+            0.49015684672072335,
+            0.9433190520193067
+          ]
+        },
+        "value": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "citation": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "unanswerable": {
+        "table": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "value": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "citation": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        },
+        "refusal": {
+          "n": 10,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.2775401687666166
+          ]
+        }
+      },
+      "yoy_computed": {
+        "table": {
+          "n": 8,
+          "successes": 8,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.6755843804891231,
+            1.0
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      },
+      "yoy_official": {
+        "table": {
+          "n": 8,
+          "successes": 8,
+          "accuracy": 1.0,
+          "wilson95": [
+            0.6755843804891231,
+            1.0
+          ]
+        },
+        "value": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "citation": {
+          "n": 8,
+          "successes": 0,
+          "accuracy": 0.0,
+          "wilson95": [
+            0.0,
+            0.3244156195108769
+          ]
+        },
+        "refusal": {
+          "n": 0,
+          "successes": 0,
+          "accuracy": null,
+          "wilson95": null
+        }
+      }
+    }
+  },
+  "plain_llm": {
+    "status": "not_run",
+    "reason": "GRUND_LLM_BASE_URL is unset"
+  },
+  "cases": [
+    {
+      "id": "q001",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q002",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q003",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null,
+      "planner_notes": null
+    },
+    {
+      "id": "q004",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": false,
+      "predicted_table": "SAM08050.px",
+      "gold_table": null,
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q005",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null,
+      "planner_notes": null
+    },
+    {
+      "id": "q006",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null,
+      "planner_notes": null
+    },
+    {
+      "id": "q007",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null,
+      "planner_notes": null
+    },
+    {
+      "id": "q008",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null,
+      "planner_notes": null
+    },
+    {
+      "id": "q009",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": null,
+      "planner_notes": null
+    },
+    {
+      "id": "q010",
+      "stratum": "unanswerable",
+      "expect": "refuse",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": true,
+      "predicted_table": null,
+      "gold_table": null,
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q011",
+      "stratum": "clarify",
+      "expect": "clarify",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": false,
+      "predicted_table": "MAN03200.px",
+      "gold_table": null,
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q012",
+      "stratum": "clarify",
+      "expect": "clarify",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": false,
+      "predicted_table": "MAN03200.px",
+      "gold_table": null,
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q013",
+      "stratum": "clarify",
+      "expect": "clarify",
+      "table_correct": null,
+      "value_correct": null,
+      "citation_correct": null,
+      "refusal_correct": false,
+      "predicted_table": "VIS01005.px",
+      "gold_table": null,
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q014",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN01201.px",
+      "gold_table": "VIN01201.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q015",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "VIS02300.px",
+      "gold_table": "FYR04202.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q016",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "UMH34065.px",
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q017",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN03301.px",
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q018",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "XLAN10201.px",
+      "gold_table": "XLAN10201.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q019",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LIF03342.px",
+      "gold_table": "LIF03342.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q020",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN02100.px",
+      "gold_table": "VIN02100.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q021",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN00102.px",
+      "gold_table": "MAN00102.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q022",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN01102.px",
+      "gold_table": "VIN01102.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q023",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "IDN02105.px",
+      "gold_table": "IDN02105.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q024",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN02005.px",
+      "gold_table": "MAN02005.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q025",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SKO02302b.px",
+      "gold_table": "SKO02302b.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q026",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "FYR04101.px",
+      "gold_table": "FYR04101.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q027",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "UMH04113.px",
+      "gold_table": "UMH04113.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q028",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN09000.px",
+      "gold_table": "MAN09000.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q029",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "UTA04010.px",
+      "gold_table": "UTA04010.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q030",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SJA08101.px",
+      "gold_table": "SJA08101.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q031",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN05331.px",
+      "gold_table": "MAN05331.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q032",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIS01004.px",
+      "gold_table": "VIS01004.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q033",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "IDN03003.px",
+      "gold_table": "IDN03003.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q034",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "UMH53110.px",
+      "gold_table": "UMH53110.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q035",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN00102.px",
+      "gold_table": "MAN00102.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q036",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "SOG09009.px",
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q037",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "MEN07004.px",
+      "gold_table": "MEN07004.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q038",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SAM01202.px",
+      "gold_table": "SAM01202.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q039",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN030101.px",
+      "gold_table": "MAN030101.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q040",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LIF03322.px",
+      "gold_table": "LIF03322.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q041",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SKO03131.px",
+      "gold_table": "SKO03131.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q042",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "FYR05103.px",
+      "gold_table": "FYR05103.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q043",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "UMH31101.px",
+      "gold_table": "UMH31101.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q044",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN01101.px",
+      "gold_table": "MAN01101.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q045",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SKO01311.px",
+      "gold_table": "SKO01311.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q046",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SJA05002.px",
+      "gold_table": "SJA05002.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q047",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "MAN05100.px",
+      "gold_table": "MAN05100.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q048",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "THJ06029.px",
+      "gold_table": "THJ06029.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q049",
+      "stratum": "level",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "SAM08050.px",
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q050",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN05303.px",
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q051",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LAU04005.px",
+      "gold_table": "LAU04005.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "used the table's own change column instead of recomputing it"
+      ]
+    },
+    {
+      "id": "q052",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "THJ01103.px",
+      "gold_table": "THJ01103.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q053",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "UMH04102.px",
+      "gold_table": "UMH04102.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q054",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN05101.px",
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q055",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "HEI09409.px",
+      "gold_table": "HEI09409.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q056",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIS08010.px",
+      "gold_table": "VIS08010.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q057",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "IDN02102.px",
+      "gold_table": "IDN02102.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q058",
+      "stratum": "yoy_computed",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN43004.px",
+      "gold_table": "MAN43004.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q059",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN43000.px",
+      "gold_table": "MAN43000.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q060",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIS02000.px",
+      "gold_table": "VIS02000.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q061",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SJA05001.px",
+      "gold_table": "SJA05001.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q062",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MEN07005.px",
+      "gold_table": "MEN07005.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q063",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN02008.px",
+      "gold_table": "MAN02008.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q064",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SAM08006.px",
+      "gold_table": "SAM08006.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q065",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "SAM04202.px",
+      "gold_table": "SAM04202.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q066",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN01101.px",
+      "gold_table": "MAN01101.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q067",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN05405.px",
+      "gold_table": "MAN05405.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q068",
+      "stratum": "share",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "FEL02000.px",
+      "gold_table": "FEL02000.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "share uses the part and the total on the same variable"
+      ]
+    },
+    {
+      "id": "q069",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIS01000.px",
+      "gold_table": "VIS01000.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "used the table's own change column instead of recomputing it"
+      ]
+    },
+    {
+      "id": "q070",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "MAN09012.px",
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q071",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LAU04007.px",
+      "gold_table": "LAU04007.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "used the table's own change column instead of recomputing it"
+      ]
+    },
+    {
+      "id": "q072",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN02092.px",
+      "gold_table": "VIN02092.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "used the table's own change column instead of recomputing it"
+      ]
+    },
+    {
+      "id": "q073",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN00000.px",
+      "gold_table": "MAN00000.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "used the table's own change column instead of recomputing it"
+      ]
+    },
+    {
+      "id": "q074",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LAU04001.px",
+      "gold_table": "LAU04001.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "used the table's own change column instead of recomputing it"
+      ]
+    },
+    {
+      "id": "q075",
+      "stratum": "yoy_official",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": null,
+      "gold_table": "VIS08002.px",
+      "planner": "deterministic",
+      "planner_notes": null
+    },
+    {
+      "id": "q076",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "THJ02105.px",
+      "gold_table": "THJ02105.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q077",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIS03401.px",
+      "gold_table": "VIS03401.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q078",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIS01005.px",
+      "gold_table": "VIS01005.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q079",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LAU04209.px",
+      "gold_table": "LAU04209.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q080",
+      "stratum": "rebase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "LAU04200.px",
+      "gold_table": "LAU04200.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q081",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN01201.px",
+      "gold_table": "VIN01201.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "no period was named, so the latest period in the table is used"
+      ]
+    },
+    {
+      "id": "q082",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": true,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "FYR04200.px",
+      "gold_table": "FYR04202.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "no period was named, so the latest period in the table is used"
+      ]
+    },
+    {
+      "id": "q083",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN03301.px",
+      "gold_table": "MAN03301.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "no period was named, so the latest period in the table is used"
+      ]
+    },
+    {
+      "id": "q084",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "XLAN10201.px",
+      "gold_table": "XLAN10201.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "no period was named, so the latest period in the table is used"
+      ]
+    },
+    {
+      "id": "q085",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": false,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "LIF03342.px",
+      "gold_table": "LIF03342.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "no period was named, so the latest period in the table is used"
+      ]
+    },
+    {
+      "id": "q086",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN02100.px",
+      "gold_table": "VIN02100.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "no period was named, so the latest period in the table is used"
+      ]
+    },
+    {
+      "id": "q087",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN00102.px",
+      "gold_table": "MAN00102.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "no period was named, so the latest period in the table is used"
+      ]
+    },
+    {
+      "id": "q088",
+      "stratum": "latest",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIN01102.px",
+      "gold_table": "VIN01102.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "no period was named, so the latest period in the table is used"
+      ]
+    },
+    {
+      "id": "q089",
+      "stratum": "paraphrase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "VIS01000.px",
+      "gold_table": "VIS01000.px",
+      "planner": "deterministic",
+      "planner_notes": [
+        "used the table's own change column instead of recomputing it"
+      ]
+    },
+    {
+      "id": "q090",
+      "stratum": "paraphrase",
+      "expect": "answer",
+      "table_correct": false,
+      "value_correct": true,
+      "citation_correct": false,
+      "refusal_correct": null,
+      "predicted_table": "MAN43000.px",
+      "gold_table": "MAN00101.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    },
+    {
+      "id": "q091",
+      "stratum": "paraphrase",
+      "expect": "answer",
+      "table_correct": true,
+      "value_correct": true,
+      "citation_correct": true,
+      "refusal_correct": null,
+      "predicted_table": "MAN01102.px",
+      "gold_table": "MAN01102.px",
+      "planner": "deterministic",
+      "planner_notes": []
+    }
+  ],
+  "llm": {
+    "enabled": false,
+    "base_url": null,
+    "model": null,
+    "quantization": null,
+    "weights": null,
+    "runtime": null,
+    "planner": "deterministic",
+    "prose": false
+  }
+}

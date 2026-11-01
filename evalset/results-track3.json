@@ -1,0 +1,972 @@
+{
+  "n": 60,
+  "correct": 60,
+  "rows": [
+    {
+      "id": "population-iceland-2026-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN12103.px"
+      ],
+      "value": "394324",
+      "answer": "In 2026, Population by country of birth, sex and age January was 394,324."
+    },
+    {
+      "id": "population-iceland-2026-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN12103.px"
+      ],
+      "value": "394324",
+      "answer": "árið 2026 var Alls í Mannfjöldi eftir fæðingarlandi, kyni og aldri . janúar 394.324."
+    },
+    {
+      "id": "population-reykjavik-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN04208.px"
+      ],
+      "value": "139804",
+      "answer": "In 2026, Reykjavikurborg in Population by sex, municipality, citizenship and age January was 139,804. The row used is Total."
+    },
+    {
+      "id": "population-reykjavik-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN02005.px"
+      ],
+      "value": "139804",
+      "answer": "árið 2026 var Reykjavíkurborg, Alls í Mannfjöldi eftir kyni, aldri og sveitarfélögum - - Sveitarfélagaskipan . janúar 139.804. Röðin sem er notuð er Alls."
+    },
+    {
+      "id": "births-2024-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN05102.px"
+      ],
+      "value": "4311",
+      "answer": "In 2024, All children in Live births by age of father was 4,311."
+    },
+    {
+      "id": "births-2024-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN05204.px"
+      ],
+      "value": "4311",
+      "answer": "árið 2024 var Alls lifandi fædd börn, Alls í Lifandi fædd börn eftir aldursflokki móður og hjúskaparstétt 4.311."
+    },
+    {
+      "id": "cpi-2026-09-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "VIS01000.px"
+      ],
+      "value": "697.3",
+      "answer": "In September 2026, Consumer price index, Index in Consumer price index and changes, base was 697.3."
+    },
+    {
+      "id": "cpi-2026-09-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "VIS01000.px"
+      ],
+      "value": "697.3",
+      "answer": "Í september 2026 var Vísitala neysluverðs, Vísitala í Vísitala neysluverðs og breytingar, grunnur 697,3."
+    },
+    {
+      "id": "wage-index-2026-08-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "LAU04000.px"
+      ],
+      "value": "1149.3",
+      "answer": "In August 2026, Value of index in Wage index from - by month was 1,149.3."
+    },
+    {
+      "id": "wage-index-2026-08-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "LAU04000.px"
+      ],
+      "value": "1149.3",
+      "answer": "Í ágúst 2026 var Vísitölugildi í Launavísitala eftir mánuðum frá 1.149,3."
+    },
+    {
+      "id": "unemployment-2026q2-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "VIN00920.px"
+      ],
+      "value": "6.5",
+      "answer": "In 2026Q2, Males and females, 16-74, Unemployment rate, % (of labour force) in Unemployment by quarters was 6.5."
+    },
+    {
+      "id": "unemployment-2026q2-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "VIN00910.px"
+      ],
+      "value": "6.5",
+      "answer": "Í 2026Á2 var Alls, Karlar og konur, 16-74 ára, Atvinnuleysi, % (af vinnuafli) í Atvinnuþátttaka, starfandi, vinnulitlir og atvinnuleysi, hlutfall eftir ársfjórðungum 6,5."
+    },
+    {
+      "id": "gdp-2025-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "THJ01102.px"
+      ],
+      "value": "4941211",
+      "answer": "In 2025, 8. Gross Domestic Product in Gross domestic product and Gross national income was 4,941,211. The release marks the figure as preliminary."
+    },
+    {
+      "id": "gdp-2025-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "THJ01102.px"
+      ],
+      "value": "4941211",
+      "answer": "árið 2025 var 8. Verg landsframleiðsla í Landsframleiðsla og þjóðartekjur 4.941.211. Útgáfan merkir töluna sem bráðabirgðatölu."
+    },
+    {
+      "id": "overnight-stays-2025-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px"
+      ],
+      "value": "9850428",
+      "answer": "In 2025, Overnight stays in Overnight stays and arrivals in all types of registered accommodation was 9,850,428."
+    },
+    {
+      "id": "overnight-stays-2025-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px"
+      ],
+      "value": "9850428",
+      "answer": "árið 2025 var Alls, Allt landið, Gistinætur í Gistinætur og gestakomur á öllum tegundum skráðra gististaða 9.850.428."
+    },
+    {
+      "id": "immigrants-2026-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN43000.px"
+      ],
+      "value": "77226",
+      "answer": "In 2026, Immigrant in Population by origin, sex and age was 77,226. The row used is Total."
+    },
+    {
+      "id": "immigrants-2026-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN43000.px"
+      ],
+      "value": "77226",
+      "answer": "árið 2026 var Alls, Innflytjandi í Mannfjöldi eftir bakgrunni, kyni og aldri 77.226. Röðin sem er notuð er Alls."
+    },
+    {
+      "id": "vigdis-1980-en",
+      "language": "en",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "KOS07112.px"
+      ],
+      "value": "15594",
+      "answer": "In , Vigdís Finnbogadóttir 1980, Number valid votes, Reykjavík in Results of presidential elections by candidate and constituency was 15,594."
+    },
+    {
+      "id": "vigdis-1980-is",
+      "language": "is",
+      "level": "easy",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "KOS07112.px"
+      ],
+      "value": "15594",
+      "answer": "Í  var Fjöldi, Vigdís Finnbogadóttir 1980, Reykjavík í Úrslit forsetakjörs eftir frambjóðendum og kjördæmum 15.594."
+    },
+    {
+      "id": "reykjavik-growth-2026-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN04203.px"
+      ],
+      "value": "1032",
+      "answer": "In 2026, Reykjavikurborg in Population by sex, municipality and citizenship January was 1,032."
+    },
+    {
+      "id": "reykjavik-growth-2026-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN02005.px"
+      ],
+      "value": "1032",
+      "answer": "árið 2026 var Reykjavíkurborg, Alls í Mannfjöldi eftir kyni, aldri og sveitarfélögum - - Sveitarfélagaskipan . janúar 1.032. Röðin sem er notuð er Alls."
+    },
+    {
+      "id": "reykjavik-share-2026-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN04203.px"
+      ],
+      "value": "35.5",
+      "answer": "In 2026, Reykjavikurborg in Population by sex, municipality and citizenship January was 35.5 percent. The part is 139,804 of 394,324."
+    },
+    {
+      "id": "reykjavik-share-2026-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN04203.px"
+      ],
+      "value": "35.5",
+      "answer": "árið 2026 var Reykjavíkurborg, Alls í Mannfjöldi eftir kyni, sveitarfélagi og ríkisfangi . janúar 35,5 prósent. Hlutinn er 139.804 af 394.324."
+    },
+    {
+      "id": "reykjavik-kopavogur-2026-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN04203.px"
+      ],
+      "value": "180090",
+      "answer": "In 2026, Reykjavikurborg in Population by sex, municipality and citizenship January was 180,090. The row used is Reykjavikurborg."
+    },
+    {
+      "id": "reykjavik-kopavogur-2026-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN04203.px"
+      ],
+      "value": "180090",
+      "answer": "árið 2026 var Reykjavíkurborg, Alls í Mannfjöldi eftir kyni, sveitarfélagi og ríkisfangi . janúar 180.090. Röðin sem er notuð er Reykjavíkurborg."
+    },
+    {
+      "id": "men-minus-women-2026-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN12103.px"
+      ],
+      "value": "10254",
+      "answer": "In 2026, Males in Population by country of birth, sex and age January was 10,254. The row used is Males."
+    },
+    {
+      "id": "men-minus-women-2026-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN04103.px"
+      ],
+      "value": "10254",
+      "answer": "árið 2026 var Alls, Karlar í Mannfjöldi eftir ríkisfangi, kyni og aldri . janúar 10.254. Röðin sem er notuð er Karlar."
+    },
+    {
+      "id": "cpi-points-2026-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "VIS01000.px"
+      ],
+      "value": "39.0",
+      "answer": "In September 2026, Consumer price index, Index in Consumer price index and changes, base was 39."
+    },
+    {
+      "id": "cpi-points-2026-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "VIS01000.px"
+      ],
+      "value": "39.0",
+      "answer": "Í september 2026 var Vísitala neysluverðs, Vísitala í Vísitala neysluverðs og breytingar, grunnur 39."
+    },
+    {
+      "id": "overnight-stays-change-2025-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px"
+      ],
+      "value": "5.8",
+      "answer": "In 2025, Overnight stays in Overnight stays and arrivals in all types of registered accommodation was 5.8 percent. That is the change from 9,312,648 (2024) to 9,850,428 (2025)."
+    },
+    {
+      "id": "overnight-stays-change-2025-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px"
+      ],
+      "value": "5.8",
+      "answer": "árið 2025 var Alls, Allt landið, Gistinætur í Gistinætur og gestakomur á öllum tegundum skráðra gististaða 5,8 prósent. Það er breyting úr 9.312.648 (árið 2024) í 9.850.428 (árið 2025)."
+    },
+    {
+      "id": "women-share-2026-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN12103.px"
+      ],
+      "value": "48.7",
+      "answer": "In 2026, Females in Population by country of birth, sex and age January was 48.7 percent. The part is 191,927 of 394,324."
+    },
+    {
+      "id": "women-share-2026-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN12103.px"
+      ],
+      "value": "48.7",
+      "answer": "árið 2026 var Alls, Konur í Mannfjöldi eftir fæðingarlandi, kyni og aldri . janúar 48,7 prósent. Hlutinn er 191.927 af 394.324."
+    },
+    {
+      "id": "wage-index-points-2026-08-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "LAU04000.px"
+      ],
+      "value": "61.6",
+      "answer": "In August 2026, Value of index in Wage index from - by month was 61.6."
+    },
+    {
+      "id": "wage-index-points-2026-08-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "LAU04000.px"
+      ],
+      "value": "61.6",
+      "answer": "Í ágúst 2026 var Vísitölugildi í Launavísitala eftir mánuðum frá 61,6."
+    },
+    {
+      "id": "immigrants-growth-2026-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN43000.px"
+      ],
+      "value": "3430",
+      "answer": "In 2026, Immigrant in Population by origin, sex and age was 3,430. The row used is Total."
+    },
+    {
+      "id": "immigrants-growth-2026-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN43000.px"
+      ],
+      "value": "3430",
+      "answer": "árið 2026 var Alls, Innflytjandi í Mannfjöldi eftir bakgrunni, kyni og aldri 3.430. Röðin sem er notuð er Alls."
+    },
+    {
+      "id": "foreign-stays-share-2025-en",
+      "language": "en",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px"
+      ],
+      "value": "86.8",
+      "answer": "In 2025, Foreigners, Overnight stays in Overnight stays and arrivals in all types of registered accommodation was 86.8 percent. The part is 8,553,582 of 9,850,428."
+    },
+    {
+      "id": "foreign-stays-share-2025-is",
+      "language": "is",
+      "level": "medium",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px"
+      ],
+      "value": "86.8",
+      "answer": "árið 2025 var Útlendingar, Allt landið, Gistinætur, Alls í Gistinætur og gestakomur á öllum tegundum skráðra gististaða 86,8 prósent. Hlutinn er 8.553.582 af 9.850.428."
+    },
+    {
+      "id": "population-and-cpi-2026-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN12103.px",
+        "VIS01000.px"
+      ],
+      "value": "394324",
+      "answer": "In 2026, Population by country of birth, sex and age January was 394,324. In September 2026, Consumer price index, Index in Consumer price index and changes, base was 697.3."
+    },
+    {
+      "id": "population-and-cpi-2026-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN12103.px",
+        "VIS01000.px"
+      ],
+      "value": "394324",
+      "answer": "árið 2026 var Alls í Mannfjöldi eftir fæðingarlandi, kyni og aldri . janúar 394.324. Í september 2026 var Vísitala neysluverðs, Vísitala í Vísitala neysluverðs og breytingar, grunnur 697,3."
+    },
+    {
+      "id": "wages-and-prices-2026-08-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "LAU04000.px",
+        "VIS01000.px"
+      ],
+      "value": "1149.3",
+      "answer": "In August 2026, Value of index in Wage index from - by month was 1,149.3. In August 2026, Consumer price index, Index in Consumer price index and changes, base was 694.6."
+    },
+    {
+      "id": "wages-and-prices-2026-08-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "LAU04000.px",
+        "VIS01000.px"
+      ],
+      "value": "1149.3",
+      "answer": "Í ágúst 2026 var Vísitölugildi í Launavísitala eftir mánuðum frá 1.149,3. Í ágúst 2026 var Vísitala neysluverðs, Vísitala í Vísitala neysluverðs og breytingar, grunnur 694,6."
+    },
+    {
+      "id": "stays-and-population-2025-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px",
+        "MAN12103.px"
+      ],
+      "value": "9850428",
+      "answer": "In 2025, Overnight stays in Overnight stays and arrivals in all types of registered accommodation was 9,850,428. In 2025, Population by country of birth, sex and age January was 389,444."
+    },
+    {
+      "id": "stays-and-population-2025-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px",
+        "MAN12103.px"
+      ],
+      "value": "9850428",
+      "answer": "árið 2025 var Alls, Allt landið, Gistinætur í Gistinætur og gestakomur á öllum tegundum skráðra gististaða 9.850.428. árið 2025 var Alls í Mannfjöldi eftir fæðingarlandi, kyni og aldri . janúar 389.444."
+    },
+    {
+      "id": "gdp-and-births-2025-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "THJ01102.px",
+        "MAN05102.px"
+      ],
+      "value": "4941211",
+      "answer": "In 2025, 8. Gross Domestic Product in Gross domestic product and Gross national income was 4,941,211. The release marks the figure as preliminary. In 2025, All children in Live births by age of father was 4,387."
+    },
+    {
+      "id": "gdp-and-births-2025-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "THJ01102.px",
+        "MAN05204.px"
+      ],
+      "value": "4941211",
+      "answer": "árið 2025 var 8. Verg landsframleiðsla í Landsframleiðsla og þjóðartekjur 4.941.211. Útgáfan merkir töluna sem bráðabirgðatölu. árið 2025 var Alls lifandi fædd börn, Alls í Lifandi fædd börn eftir aldursflokki móður og hjúskaparstétt 4.387."
+    },
+    {
+      "id": "stays-per-inhabitant-2025-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px",
+        "MAN12103.px"
+      ],
+      "value": "25.2936",
+      "answer": "Calculated from two tables: 25.2936. In 2025, Overnight stays in Overnight stays and arrivals in all types of registered accommodation was 9,850,428. In 2025, Population by country of birth, sex and age January was 389,444."
+    },
+    {
+      "id": "stays-per-inhabitant-2025-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "SAM01601.px",
+        "MAN12103.px"
+      ],
+      "value": "25.2936",
+      "answer": "Útreiknað úr tveimur töflum: 25,2936. árið 2025 var Alls, Allt landið, Gistinætur í Gistinætur og gestakomur á öllum tegundum skráðra gististaða 9.850.428. árið 2025 var Alls í Mannfjöldi eftir fæðingarlandi, kyni og aldri . janúar 389.444."
+    },
+    {
+      "id": "births-per-1000-2025-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN05102.px",
+        "MAN12103.px"
+      ],
+      "value": "11.2648",
+      "answer": "Calculated from two tables: 11.2648. In 2025, All children in Live births by age of father was 4,387. In 2025, Population by country of birth, sex and age January was 389,444."
+    },
+    {
+      "id": "births-per-1000-2025-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN05204.px",
+        "MAN12103.px"
+      ],
+      "value": "11.2648",
+      "answer": "Útreiknað úr tveimur töflum: 11,2648. árið 2025 var Alls lifandi fædd börn, Alls í Lifandi fædd börn eftir aldursflokki móður og hjúskaparstétt 4.387. árið 2025 var Alls í Mannfjöldi eftir fæðingarlandi, kyni og aldri . janúar 389.444."
+    },
+    {
+      "id": "wages-and-unemployment-2026-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "LAU04000.px",
+        "VIN00920.px"
+      ],
+      "value": "1149.3",
+      "answer": "In August 2026, Value of index in Wage index from - by month was 1,149.3. In 2026Q2, Males and females, 16-74, Unemployment rate, % (of labour force) in Unemployment by quarters was 6.5."
+    },
+    {
+      "id": "wages-and-unemployment-2026-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "LAU04000.px",
+        "VIN00910.px"
+      ],
+      "value": "1149.3",
+      "answer": "Í ágúst 2026 var Vísitölugildi í Launavísitala eftir mánuðum frá 1.149,3. Í 2026Á2 var Alls, Karlar og konur, 16-74 ára, Atvinnuleysi, % (af vinnuafli) í Atvinnuþátttaka, starfandi, vinnulitlir og atvinnuleysi, hlutfall eftir ársfjórðungum 6,5."
+    },
+    {
+      "id": "gdp-and-stays-2025-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "THJ01102.px",
+        "SAM01601.px"
+      ],
+      "value": "4941211",
+      "answer": "In 2025, 8. Gross Domestic Product in Gross domestic product and Gross national income was 4,941,211. The release marks the figure as preliminary. In 2025, Overnight stays in Overnight stays and arrivals in all types of registered accommodation was 9,850,428."
+    },
+    {
+      "id": "gdp-and-stays-2025-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "THJ01102.px",
+        "SAM01601.px"
+      ],
+      "value": "4941211",
+      "answer": "árið 2025 var 8. Verg landsframleiðsla í Landsframleiðsla og þjóðartekjur 4.941.211. Útgáfan merkir töluna sem bráðabirgðatölu. árið 2025 var Alls, Allt landið, Gistinætur í Gistinætur og gestakomur á öllum tegundum skráðra gististaða 9.850.428."
+    },
+    {
+      "id": "births-and-immigrants-2026-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN05102.px",
+        "MAN43000.px"
+      ],
+      "value": "4387",
+      "answer": "In 2025, All children in Live births by age of father was 4,387. In 2026, Immigrant in Population by origin, sex and age was 77,226. The row used is Total."
+    },
+    {
+      "id": "births-and-immigrants-2026-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "MAN05204.px",
+        "MAN43000.px"
+      ],
+      "value": "4387",
+      "answer": "árið 2025 var Alls lifandi fædd börn, Alls í Lifandi fædd börn eftir aldursflokki móður og hjúskaparstétt 4.387. árið 2026 var Alls, Innflytjandi í Mannfjöldi eftir bakgrunni, kyni og aldri 77.226. Röðin sem er notuð er Alls."
+    },
+    {
+      "id": "cpi-and-unemployment-2026-en",
+      "language": "en",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "VIS01000.px",
+        "VIN00920.px"
+      ],
+      "value": "697.3",
+      "answer": "In September 2026, Consumer price index, Index in Consumer price index and changes, base was 697.3. In 2026Q2, Males and females, 16-74, Unemployment rate, % (of labour force) in Unemployment by quarters was 6.5."
+    },
+    {
+      "id": "cpi-and-unemployment-2026-is",
+      "language": "is",
+      "level": "hard",
+      "correct": true,
+      "numbers_right": true,
+      "tables_right": true,
+      "refused": false,
+      "tables": [
+        "VIS01000.px",
+        "VIN00910.px"
+      ],
+      "value": "697.3",
+      "answer": "Í september 2026 var Vísitala neysluverðs, Vísitala í Vísitala neysluverðs og breytingar, grunnur 697,3. Í 2026Á2 var Alls, Karlar og konur, 16-74 ára, Atvinnuleysi, % (af vinnuafli) í Atvinnuþátttaka, starfandi, vinnulitlir og atvinnuleysi, hlutfall eftir ársfjórðungum 6,5."
+    }
+  ],
+  "summary": {
+    "all": {
+      "n": 60,
+      "successes": 60,
+      "wilson95": [
+        0.9398260695220669,
+        1.0
+      ]
+    },
+    "en": {
+      "n": 30,
+      "successes": 30,
+      "wilson95": [
+        0.8864829086095221,
+        1.0
+      ]
+    },
+    "is": {
+      "n": 30,
+      "successes": 30,
+      "wilson95": [
+        0.8864829086095221,
+        1.0
+      ]
+    },
+    "by_level": {
+      "easy": {
+        "all": {
+          "n": 20,
+          "successes": 20,
+          "wilson95": [
+            0.8388698745050667,
+            1.0
+          ]
+        },
+        "en": {
+          "n": 10,
+          "successes": 10,
+          "wilson95": [
+            0.7224598312333834,
+            1.0
+          ]
+        },
+        "is": {
+          "n": 10,
+          "successes": 10,
+          "wilson95": [
+            0.7224598312333834,
+            1.0
+          ]
+        }
+      },
+      "medium": {
+        "all": {
+          "n": 20,
+          "successes": 20,
+          "wilson95": [
+            0.8388698745050667,
+            1.0
+          ]
+        },
+        "en": {
+          "n": 10,
+          "successes": 10,
+          "wilson95": [
+            0.7224598312333834,
+            1.0
+          ]
+        },
+        "is": {
+          "n": 10,
+          "successes": 10,
+          "wilson95": [
+            0.7224598312333834,
+            1.0
+          ]
+        }
+      },
+      "hard": {
+        "all": {
+          "n": 20,
+          "successes": 20,
+          "wilson95": [
+            0.8388698745050667,
+            1.0
+          ]
+        },
+        "en": {
+          "n": 10,
+          "successes": 10,
+          "wilson95": [
+            0.7224598312333834,
+            1.0
+          ]
+        },
+        "is": {
+          "n": 10,
+          "successes": 10,
+          "wilson95": [
+            0.7224598312333834,
+            1.0
+          ]
+        }
+      }
+    }
+  }
+}

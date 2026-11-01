@@ -1,0 +1,18 @@
+{
+  "tables": 2104,
+  "editions": 3911,
+  "bilingual": 1807,
+  "by_db_editions": {
+    "Efnahagur": 611,
+    "Ibuar": 1066,
+    "Sogulegar": 147,
+    "Umhverfi": 147,
+    "Samfelag": 1402,
+    "Atvinnuvegir": 538
+  },
+  "embedding_kind": "chargram",
+  "embedding_model": "chargram-384",
+  "embedding_error": null,
+  "embedding_dim": 384,
+  "document_example": "VIS01000 Consumer price index and changes, base 1988=100 Efnahagur Prices and consumption Consumer price index CPI Efnahagur Month Month Index Index Consumer price index Consumer price index less housing cost Item Item Index Monthly change,"
+}

@@ -1,0 +1,26 @@
+# Ordered flows. Names match grund_rails.engine.default_engine.
+protocol:
+  statuses: [passed, modified, blocked]
+  certain_is_orthogonal: true
+  sides: [input, context, output]
+  prior_work: https://github.com/HaoZeke/vangrail
+
+flows:
+  input:
+    - jailbreak
+    - injected_instructions
+  context:
+    - injected_instructions
+    - jailbreak
+  output:
+    - cell_claim
+    - number_grounding
+    - citation
+    - refusal
+
+grants:
+  - tool: pxweb.query
+    effect: read
+    note: >
+      Locked before the POST. Arguments are the table id and the validated
+      selection list. A later idea from the model is not a new grant.

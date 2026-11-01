@@ -8,6 +8,62 @@ This is an entry for GAGNAÞON 2026.
 Grund is not an official Statistics Iceland product.
 The project stack is NVIDIA OpenShell, snelnext, vangrail, and ljos.
 
+## Live demo
+
+<https://201-79-5-118.sslip.io/>
+
+Username `grund`; the password is in the submission email.
+
+## How Grund gets data from Statistics Iceland
+
+Grund reads the public PxWeb API at `px.hagstofa.is`.
+The default deterministic mode needs no API key.
+
+1. **Plan.**
+   The question is parsed into a measure, a place, a period, and any arithmetic it asks for.
+   `GRUND_PLANNER=deterministic` is the default and the mode every frozen score was measured in.
+2. **Search the catalogue.**
+   `data/catalogue.jsonl` lists 2,104 Statistics Iceland tables.
+   Retrieval (`app/grund/retrieve.py`) ranks them with BM25 over titles and paths, a character n-gram (chargram) index, and `multilingual-e5-small` embeddings in `data/index-e5-small`.
+   Value codes come from the labels each table publishes, through the index in `data/index-lang`.
+3. **Query PxWeb.**
+   `PxWebClient` in `indexer/grund_index/client.py` POSTs a JSON query to the table's URL under `https://px.hagstofa.is/pxen/api/v1/en` or `https://px.hagstofa.is/pxis/api/v1/is`.
+   The body names each variable code with `{"filter": "item", "values": [...]}`, and the validator (`app/grund/validator.py`) checks those codes against the table's real variables before the request goes out.
+   A locked plan grants that one `pxweb.query` call, so the posted table id and query have to match the grant.
+4. **Cache.**
+   Responses are stored in `data/cache` (GET and POST bodies, keyed by a hash of the request), so a repeated question does not hit PxWeb again.
+5. **Compute in code.**
+   Differences, changes, and shares are computed in `grund.arithmetic` from the fetched cells, never by a language model.
+6. **Check before showing.**
+   The number-grounding rail requires every number in the answer to come from a fetched cell, from `grund.arithmetic`, or from a time key on those cells.
+   The Ruby cell-claim rail, built on [vangrail](https://github.com/HaoZeke/vangrail) 0.3.0 (`rails/ruby/grund_cell_claim_rail.rb`, called through `rails/grund_rails/vangrail_client.py`), recomputes the figure from the cells.
+   If the checker is offline, Grund refuses to start.
+   If a claim does not check out, the card shows no figure and says why.
+
+Each answer card links back to the table on `px.hagstofa.is`.
+
+## Example questions
+
+These answer with a figure and a source card:
+
+- How many overnight stays were there in registered accommodation in Iceland in 2022?
+- What was the unemployment rate in Iceland in the third quarter of 2024?
+- How many more men than women lived in Iceland on 1 January 2024?
+- By how many points did the consumer price index rise from June 2023 to June 2024?
+- What were the wage index and the consumer price index in March 2024?
+
+In Icelandic:
+
+- Hve margar gistinætur voru á skráðum gististöðum á Íslandi árið 2022?
+- Hvert var atvinnuleysi á Íslandi á þriðja ársfjórðungi 2024?
+
+This one should be refused:
+
+- What is the minimum wage in Iceland?
+
+Iceland has no statutory minimum wage; pay floors are set in collective agreements, and Statistics Iceland publishes no table for it.
+A refusal is a feature: Grund would rather show no number than one it cannot trace to a published cell.
+
 ## Frozen submission
 
 This tree is the frozen GAGNAÞON entry: base `2637b291` plus the frame build and `GRUND_UNEMP_GUARD`.
@@ -88,6 +144,8 @@ Its four wrong answers are: the national 2021 population given for the South; to
 
 ## Run it
 
+These are the usage instructions.
+The default deterministic mode needs no API keys.
 The chat UI and the API listen on port 8741.
 
 ### Container

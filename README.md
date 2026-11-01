@@ -64,6 +64,38 @@ This one should be refused:
 Iceland has no statutory minimum wage; pay floors are set in collective agreements, and Statistics Iceland publishes no table for it.
 A refusal is a feature: Grund would rather show no number than one it cannot trace to a published cell.
 
+## Extrapolate (optional)
+
+Extrapolate is an opt-in toggle on the chat page.
+It is off by default, and it never edits the verified answer.
+When it is on, each answer that is not a refusal gets an Extrapolate button.
+The button adds a separate panel, headed "Beyond the data · AI-generated", below the verified answer.
+
+The panel text comes from any OpenAI-compatible endpoint.
+Set it with `GRUND_LLM_BASE_URL`, `GRUND_LLM_MODEL`, and `GRUND_LLM_API_KEY`.
+The model can call three kinds of tool:
+
+- PxWeb table search, metadata, and cell fetch, on `px.hagstofa.is` only.
+- A calculator that parses arithmetic and does not execute code.
+- Search and page fetch on official `island.is` pages only, at most two pages for each answer.
+
+Every new number has to carry a mark: `[fetch:TABLE]`, `[calc:N]`, `[source:URL]`, or `(inferred)`.
+`elab_guard` drops any sentence with an unmarked new number.
+It also drops a marked number that the cited fetch, calculation, or page does not contain.
+The "From the data" part may use only numbers that are already in the verified answer or the question.
+Each panel carries a visible label and a zero-width watermark signed with an HMAC (hash-based message authentication code).
+Each call writes one line to a decision log in JSON Lines format, and `/agent/stats` sums the log.
+
+All scores in this repository come from the deterministic path only.
+Extrapolate played no part in any score.
+
+The code is in [`extrapolate/`](extrapolate/): `explain.py` is the small HTTP service, and `elab_guard.py` is the number guard with its tests.
+
+### Next step: a decision gate
+
+An optional `JEV_API_KEY` would let a fast, cheap classification model (Jev by TypeSafe AI) decide whether a question justifies the extra, more expensive model calls before Extrapolate runs.
+This check is not wired in yet.
+
 ## Frozen submission
 
 This tree is the frozen GAGNAÞON entry: base `2637b291` plus the frame build and `GRUND_UNEMP_GUARD`.

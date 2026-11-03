@@ -181,6 +181,21 @@ def map_request(edition: dict, request: dict) -> dict[str, list[str]] | None:
             continue
         if variable.get("elimination"):
             continue
+        # A named row beats the total, including "1. Flug" for "flugi".
+        # Several equally specific rows is not a licence to answer with the total.
+        question = str(request.get("_question") or "")
+        named = match_value_codes(variable.get("values") or [], question, str(edition.get("title") or ""))
+        if len(named) > 1:
+            return None
+        if len(named) == 1:
+            chosen[variable["code"]] = [named[0]]
+            continue
+        # "Total - excluding public administration" is the row. Bare "Total"
+        # is only the row when the question did not write a longer label.
+        written = _written_label(variable, question)
+        if written is not None:
+            chosen[variable["code"]] = [written]
+            continue
         total = _total_code(variable)
         if total is not None:
             chosen[variable["code"]] = [total]
@@ -273,7 +288,9 @@ class MetaStore:
             if score <= 0:
                 continue
             scored[doc["id"]] = score
-        if client is not None:
+        # The shipped metadata index already names every table. A live
+        # database search is only a fallback when that index did not load.
+        if client is not None and not self.by_id:
             for table_id, live_score in _live_ids(
                 client, request.get("_language") or "en", measure_terms(request)
             ):
@@ -452,6 +469,142 @@ def _attach_share_total(variables: list[dict], chosen: dict[str, list[str]]) -> 
                 codes.append(total)
             return True
     return False
+
+
+# "1. Flug" and "01.1 Food" are list indexes. "30 years" is the row name.
+_LIST_NUMBER = re.compile(r"^(?:\d+\.)+\d*\s+|^\d+\.\s+")
+_GENERIC_ROW = {
+    "year", "years", "old", "aged", "ara", "arid", "ari", "ars", "ar",
+    "total", "totals", "alls", "samtals", "all", "heild",
+    "index", "rate", "number", "percent", "percentage", "hlutfall", "prosent",
+}
+_CASE_ENDINGS = (
+    "inum", "unum", "anna", "urnar", "arnar", "inni",
+    "um", "ar", "ir", "ur", "inn", "an", "num", "i", "a", "u", "s",
+)
+
+
+def _case_forms(token: str) -> set[str]:
+    """The token plus one short grammatical stem.
+
+    ``flugi`` and ``flug`` are the same row. The stem has to be at least
+    four letters, so a two-letter word is not stripped to nothing.
+    """
+    forms = {token}
+    if len(token) < 5:
+        return forms
+    for suffix in _CASE_ENDINGS:
+        if token.endswith(suffix) and len(token) - len(suffix) >= 4:
+            forms.add(token[: -len(suffix)])
+            break
+    return forms
+
+
+def _word_forms(text: str) -> set[str]:
+    forms: set[str] = set()
+    raw = text or ""
+    icelandic = any(ch in raw.lower() for ch in "áéíóúýþæöð")
+    lemmas = None
+    try:
+        from grund_index.textutil import icelandic_text, lemmas as lemma_fn
+
+        icelandic = icelandic or icelandic_text(raw)
+        lemmas = lemma_fn
+    except Exception:
+        lemmas = None
+    for token in re.findall(r"[a-z0-9]+", fold(raw)):
+        forms.add(token)
+        forms.update(_case_forms(token))
+        if lemmas is not None and len(token) >= 4:
+            forms.update(lemmas(token, icelandic=icelandic))
+    return forms
+
+
+def stripped_label(label: str) -> str:
+    """Drop a leading list number. ``1. Flug`` and ``01.1 Food`` keep the name."""
+    return _LIST_NUMBER.sub("", fold(label or "").strip()).strip()
+
+
+def match_value_codes(values, question: str, title: str = "") -> list[str]:
+    """Non-total rows the question names, best match first when one is stricter.
+
+    A tie at the top is returned in full. The caller then refuses a total
+    instead of picking one of them.
+    """
+    asked = _word_forms(question)
+    titled = _word_forms(title) if title else set()
+    scored: list[tuple[int, str]] = []
+    for code, label in values or []:
+        plain = fold(str(label or "")).strip()
+        if plain in _TOTALS or plain in _GENERIC_ROW:
+            continue
+        tokens = re.findall(r"[a-z0-9]+", stripped_label(str(label or "")))
+        if not tokens:
+            continue
+        # "in Iceland" is the place. "16 years and older" is not the row 16.
+        if plain in {"iceland", "island", "islandi"} and not re.search(
+            r"\b(citizen|born|faed|rikisfang|origin|bakgrunn|upprun|thjoderni|islensk)\b",
+            fold(question or ""),
+        ):
+            continue
+        if re.search(r"\b(\d{1,3})\s+(?:years?|ara|ar)\s+(?:and|og)\s+(?:older|eldri)\b", fold(question or "")):
+            if re.fullmatch(r"\d{1,3}(?:\s+years?|\s+ara|\s+ar)?", " ".join(tokens)):
+                continue
+        matched = 0
+        blocked = False
+        for token in tokens:
+            if token.isdigit() and len(token) == 4:
+                continue
+            if token in _GENERIC_ROW:
+                continue
+            forms = _case_forms(token)
+            if forms & titled:
+                continue
+            if token.isdigit():
+                # "1 January" is a day. It does not name the age row "1 year".
+                age_label = any(part in {"year", "years", "ara", "ar", "ari", "ars"} for part in tokens)
+                named_age = re.search(
+                    rf"\b{re.escape(token)}\s+(?:years?|ara|ar)\b|\baged\s+{re.escape(token)}\b",
+                    fold(question or ""),
+                )
+                if age_label and not named_age:
+                    continue
+                if token in asked:
+                    matched += 1
+                else:
+                    blocked = True
+                continue
+            if len(token) < 4:
+                # "of" and "in" do not name a row. A one-word label such as
+                # "air" still matches when it is the whole label.
+                if len(tokens) == 1 and len(token) >= 3 and token in asked:
+                    matched += 1
+                continue
+            if forms & asked or token in asked:
+                matched += 1
+            elif len(token) >= 4:
+                blocked = True
+        if matched and not blocked:
+            scored.append((matched, str(code)))
+    if not scored:
+        return []
+    best = max(item[0] for item in scored)
+    return [code for count, code in scored if count == best]
+
+
+def _written_label(variable: dict, question: str) -> str | None:
+    """The longest value label that the question writes out in full."""
+    folded_q = fold(question or "")
+    if not folded_q:
+        return None
+    best: tuple[int, str] | None = None
+    for code, label in variable.get("values") or []:
+        plain = fold(str(label or ""))
+        if len(plain) < 12 or plain not in folded_q:
+            continue
+        if best is None or len(plain) > best[0]:
+            best = (len(plain), str(code))
+    return None if best is None else best[1]
 
 
 def _total_code(variable: dict) -> str | None:

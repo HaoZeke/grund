@@ -1,0 +1,67 @@
+# Grund behind Caddy. Every value that differs between hosts is an
+# environment placeholder; the defaults are the production ones.
+#
+#   GRUND_HOST            public name with a certificate, e.g. 203-0-113-7.sslip.io
+#   GRUND_IP              the bare IP; plain http on it only redirects to GRUND_HOST
+#   GRUND_AUTH_USER       basic_auth user
+#   GRUND_AUTH_HASH       basic_auth bcrypt hash (caddy hash-password)
+#   GRUND_API_UPSTREAM    the grund container
+#   GRUND_AGENT_UPSTREAM  the Extrapolate sidecar
+#   GRUND_WEB_ROOT        the built web UI
+#
+# Check with:  caddy adapt --config deploy/Caddyfile --adapter caddyfile
+{
+	http_port {$GRUND_HTTP_PORT:80}
+	https_port {$GRUND_HTTPS_PORT:443}
+
+	# The default logger carries every runtime log that is not an access log,
+	# including http.log.error, which writes the full request headers of any
+	# request that ends in a 5xx (an upstream that is down, a dial error, a
+	# timeout). A browser-supplied model endpoint and key travel as request
+	# headers, so they are deleted here. Header names are logged in Go's
+	# canonical form: X-Grund-LLM-Key is logged as X-Grund-Llm-Key.
+	# Keep the level at INFO: reverse_proxy logs request headers at DEBUG.
+	log default {
+		output stderr
+		level INFO
+		format filter {
+			request>headers>X-Grund-Llm-Key delete
+			request>headers>X-Grund-Llm-Base delete
+		}
+	}
+}
+
+(grund_access_log) {
+	log {
+		output stderr
+		format filter {
+			request>headers>X-Grund-Llm-Key delete
+			request>headers>X-Grund-Llm-Base delete
+		}
+	}
+}
+
+{$GRUND_HOST:localhost} {
+	import grund_access_log
+	basic_auth {
+		{$GRUND_AUTH_USER} {$GRUND_AUTH_HASH}
+	}
+	handle_path /agent/* {
+		reverse_proxy {$GRUND_AGENT_UPSTREAM:127.0.0.1:8743}
+	}
+	handle /api/* {
+		reverse_proxy {$GRUND_API_UPSTREAM:127.0.0.1:8741}
+	}
+	handle {
+		root * {$GRUND_WEB_ROOT:/data/grund-web}
+		try_files {path} /index.html
+		file_server
+	}
+}
+
+# Plain http on the bare IP never proxies: a key typed there would travel in
+# cleartext. It only sends the browser to the https site.
+http://{$GRUND_IP:127.0.0.1} {
+	import grund_access_log
+	redir https://{$GRUND_HOST:localhost}{uri} permanent
+}

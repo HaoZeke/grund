@@ -8,10 +8,12 @@ import time
 from datetime import datetime, timezone
 from typing import Any
 
+from grund import request_state
 from grund.answer import refusal, render
 from grund.compound import combine_answers, split_question
 from grund.arithmetic import ArithmeticError, format_stat
 from grund.bind import Binding, bind
+from grund.cell_unit import cell_unit
 from grund.compute import allowed_numbers, compute, extract_rows, footnotes, release_flags
 from grund.langbind import binding_from_values
 from grund.llm import ChatClient, parse_json_object
@@ -30,7 +32,15 @@ from grund.retrieve import ListingRetriever, listing_path
 from grund.scope import clearly_out_of_scope
 from grund.validator import ValidationError, query_body, validate
 from grund_index.catalogue import Catalogue, Hit
-from grund_index.client import PxWebClient, PxWebError
+from grund_index.client import (
+    FetchInfo,
+    PxWebClient,
+    PxWebError,
+    clear_fetch,
+    last_fetch,
+    pop_question_budget,
+    push_question_budget,
+)
 from grund_index.model import Edition, Table
 from grund_index.textutil import fold, tokens
 from grund_rails.engine import RailEngine, default_engine
@@ -149,7 +159,7 @@ def _rc1_on() -> bool:
 
 
 def _asks_constant(question: str) -> bool:
-    asked = fold(question)
+    asked = fold(question).replace("-", " ")
     if any(phrase in asked for phrase in ("constant price", "fast verdlag", "fostu verd", "a fostu")):
         return True
     return re.search(r"\b(real|raun)\b", asked) is not None
@@ -614,6 +624,40 @@ def _with_source_line(prose: str, language: str, table_id: str, edition: Edition
     return prose.rstrip() + " " + line
 
 
+def _with_fetch_note(prose: str, language: str, source: dict, info: FetchInfo | None) -> str:
+    """Name the snapshot date, or a stale copy's fetch time, after the citation."""
+    if not isinstance(info, FetchInfo):
+        return prose
+    if not info.stale and info.origin != "mirror":
+        return prose
+    if info.fetched_at:
+        source["fetched_at"] = info.fetched_at
+    if info.updated:
+        source["data_as_of"] = info.updated
+    if info.snapshot:
+        source["snapshot"] = info.snapshot
+    if info.origin == "mirror":
+        source["from_mirror"] = True
+    if info.stale or info.origin == "cache":
+        source["cached"] = True
+    when = info.updated or info.snapshot or info.fetched_at or ""
+    if info.stale and info.fetched_at:
+        if language == "is":
+            note = f"Niðurstaða úr skyndiminni, sótt {info.fetched_at}."
+        else:
+            note = f"Cached result, fetched at {info.fetched_at}."
+    elif when:
+        if language == "is":
+            note = f"Gögn miðuð við {when}."
+        else:
+            note = f"Data as of {when}."
+    else:
+        return prose
+    if note in prose:
+        return prose
+    return prose.rstrip() + " " + note
+
+
 def web_url(edition: Edition, table_id: str) -> str:
     """Citation URL.
 
@@ -633,7 +677,7 @@ class Engine:
         planner: str | None = None,
     ) -> None:
         self.catalogue = catalogue
-        self.client = client or PxWebClient(rate=4.0)
+        self.client = client or PxWebClient()
         self.rails = rails or default_engine()
         self.chat = chat or ChatClient()
         self.planner = planner or os.environ.get("GRUND_PLANNER", "auto")
@@ -654,9 +698,19 @@ class Engine:
             self._require_value_index()
 
     def ask(self, question: str, language: str | None = None) -> dict[str, Any]:
-        if getattr(self, "_ask_depth", 0):
+        budget_token = push_question_budget()
+        try:
+            return self._ask_outer(question, language)
+        finally:
+            pop_question_budget(budget_token)
+
+    def _ask_outer(self, question: str, language: str | None = None) -> dict[str, Any]:
+        if request_state.current().in_ask:
             return self._ask_topic(question, language)
-        self._ask_depth = 1
+        with request_state.scoped(in_ask=True):
+            return self._ask_framed(question, language)
+
+    def _ask_framed(self, question: str, language: str | None) -> dict[str, Any]:
         from grund.frame import annotate_latest, frame_enabled, frame_question, push_frame, reset_frame
 
         token = push_frame(None)
@@ -665,6 +719,21 @@ class Engine:
             original = question
             if frame_enabled():
                 framed = frame_question(original)
+                from grund.frame import needs_clarification
+
+                gap = needs_clarification(framed)
+                if gap:
+                    from grund.parse import parse_question as _parse
+
+                    parsed = _parse(original, language or framed.language)
+                    return self._finish_refusal(
+                        parsed,
+                        gap,
+                        [],
+                        time.perf_counter(),
+                        [],
+                        detail={"reason": gap},
+                    )
                 if framed.blocked:
                     from grund.parse import parse_question as _parse
 
@@ -687,7 +756,6 @@ class Engine:
             result = self._ask_topic(question, language)
             return annotate_latest(result, framed if framed is not None and framed.use else None)
         finally:
-            self._ask_depth = 0
             reset_frame(token)
 
     def _ask_topic(self, question: str, language: str | None = None) -> dict[str, Any]:
@@ -700,27 +768,14 @@ class Engine:
         from grund.compound import split_question as _split
         from grund.topic_prior import baseline_paths_agreed, enabled as prior_enabled
 
-        owner = False
-        if prior_enabled() and not getattr(self, "_prior_guarded", False) and _split(question) is None:
-            owner = True
-            self._prior_guarded = True
-            saved = os.environ.get("GRUND_TOPIC_PRIOR")
-            os.environ["GRUND_TOPIC_PRIOR"] = "0"
-            try:
+        if prior_enabled() and not request_state.current().prior_guarded and _split(question) is None:
+            with request_state.scoped(prior_guarded=True, topic_prior_off=True):
                 baseline = self._ask_with_prior(question, language)
-            finally:
-                if saved is None:
-                    os.environ.pop("GRUND_TOPIC_PRIOR", None)
-                else:
-                    os.environ["GRUND_TOPIC_PRIOR"] = saved
             if baseline_paths_agreed(baseline):
-                self._prior_guarded = False
                 return baseline
-        try:
-            return self._ask_with_prior(question, language)
-        finally:
-            if owner:
-                self._prior_guarded = False
+            with request_state.scoped(prior_guarded=True):
+                return self._ask_with_prior(question, language)
+        return self._ask_with_prior(question, language)
 
     def _ask_with_prior(self, question: str, language: str | None = None) -> dict[str, Any]:
         started = time.perf_counter()
@@ -747,22 +802,19 @@ class Engine:
 
         if (
             answer_path() == "ranker"
-            and not getattr(self, "_gate_active", False)
-            and getattr(self, "_pinned_hit", None) is None
+            and not request_state.current().gate_active
+            and request_state.current().pinned_hit is None
             and split_question(question) is None
         ):
-            self._gate_active = True
-            try:
+            with request_state.scoped(gate_active=True):
                 ranker = self.ask(question, language)
-            finally:
-                self._gate_active = False
             detail = ranker.get("detail")
             if isinstance(detail, dict) and detail.get("kind") in {"non_statistics", "opinion", "future"}:
                 return ranker
             return self._agree_with_hybrid(question, parsed, ranker, rail_log, started)
 
         pieces = split_question(question)
-        if pieces is not None and getattr(self, "_pinned_hit", None) is None:
+        if pieces is not None and request_state.current().pinned_hit is None:
             return self._answer_pieces(question, pieces, parsed, rail_log, started)
 
         signal = clearly_out_of_scope(question)
@@ -796,7 +848,7 @@ class Engine:
 
         years = [year for year, _month in parsed.periods]
         value_bindings: dict = {}
-        pinned = getattr(self, "_pinned_hit", None)
+        pinned = request_state.current().pinned_hit
         if pinned is not None:
             hits = [pinned]
             search_hits = hits
@@ -1061,6 +1113,13 @@ class Engine:
                         effect = "pass"
                         verdict = {**verdict, "status": "passed", "certain": True, "pop_cell": True}
                         produced["verdict"] = verdict
+                if effect != "pass":
+                    from grund.country_row import cell_clears as country_cell_clears
+
+                    if country_cell_clears(produced, verdict, request_state.current().pinned_rows, parsed.language):
+                        effect = "pass"
+                        verdict = {**verdict, "status": "passed", "certain": True, "country_cell": True}
+                        produced["verdict"] = verdict
                 if effect == "pass":
                     from grund.istown import town_states_country
 
@@ -1096,6 +1155,17 @@ class Engine:
             # A 429 or a dropped connection is not evidence that the next table
             # is the one the question asked for. A bad query still falls through.
             if produced.get("transport"):
+                if produced.get("rate_limited"):
+                    return self._finish_refusal(
+                        parsed,
+                        "rate_limit",
+                        rail_log,
+                        started,
+                        candidates,
+                        detail=produced.get("detail"),
+                        planner=planner_name,
+                        sources=blocked_sources,
+                    )
                 produced = None
                 break
             if (
@@ -1167,6 +1237,7 @@ class Engine:
             source_bits["binding"],
             calculated,
         )
+        prose = _with_fetch_note(prose, parsed.language, source, produced.get("fetch"))
         from grund.bind2 import cell_was_replaced, remember_query
 
         remember_query(question, source_bits["table"].id, source_bits["binding"])
@@ -1199,7 +1270,9 @@ class Engine:
             ),
         }
         built["bind2_replaced"] = cell_was_replaced(source_bits["binding"].notes)
-        if getattr(self, "_gate_active", False) or getattr(self, "_defer_present", False):
+        if "country row" in source_bits["binding"].notes:
+            built["source"] = {**source, "country_row": True}
+        if request_state.current().gate_active or request_state.current().defer_present:
             return built
         return self._maybe_abstain(parsed, built)
 
@@ -1210,14 +1283,20 @@ class Engine:
             left = self._ask_pinned(left_question, parsed.language, pair[0])
             right = self._ask_pinned(right_question, parsed.language, pair[1])
         else:
-            self._defer_present = True
-            try:
+            with request_state.scoped(defer_present=True):
                 left = self.ask(left_question, parsed.language)
                 right = self.ask(right_question, parsed.language)
-            finally:
-                self._defer_present = False
         merged = combine_answers(kind, left, right, scale, parsed.language)
         if merged is None:
+            if left.get("rate_limited") or right.get("rate_limited"):
+                return self._finish_refusal(
+                    parsed,
+                    "rate_limit",
+                    rail_log,
+                    started,
+                    candidates=[],
+                    detail=left.get("detail") or right.get("detail"),
+                )
             return self._finish_refusal(
                 parsed,
                 "no_table",
@@ -1402,13 +1481,10 @@ class Engine:
         """Fetched cells, plus label digits and the cell's magnitude."""
         return allowed_numbers(rows, derived, population)
 
-    def _ask_pinned(self, question: str, language: str, hit: Hit) -> dict:
-        previous = getattr(self, "_pinned_hit", None)
-        self._pinned_hit = hit
-        try:
+    def _ask_pinned(self, question: str, language: str, hit: Hit, **pins: Any) -> dict:
+        """Ask again on ``hit`` alone; ``pins`` adds rows or locks for this ask only."""
+        with request_state.scoped(pinned_hit=hit, **pins):
             return self.ask(question, language)
-        finally:
-            self._pinned_hit = previous
 
     def _pair_hits(self, question: str) -> list[Hit] | None:
         """One table for each half, from retrieve_pair, on the index path.
@@ -1534,9 +1610,14 @@ class Engine:
         self, parsed: ParsedQuestion, hits: list[Hit], value_bindings: dict | None = None
     ) -> tuple[Binding | None, Table | None, list[str]]:
         if value_bindings:
-            bound = self._bind_listed(parsed, hits, value_bindings)
-            if bound is not None:
-                return bound
+            from grund.isbirths import parent_role, specific_age
+
+            # A named parent's age is the breakdown table. The value-index
+            # walk would keep the first headline table that binds at all.
+            if not (specific_age(parsed.text) and parent_role(parsed.text)):
+                bound = self._bind_listed(parsed, hits, value_bindings)
+                if bound is not None:
+                    return bound
         ranked = self._prefer_quoted_title(parsed, self._prefer_closed_series(parsed, self._rank(parsed, hits)))
         if not ranked:
             return None, None, []
@@ -1610,6 +1691,12 @@ class Engine:
 
     def _produce(self, parsed: ParsedQuestion, binding: Binding, table: Table, question: str, rail_log: list) -> dict:
         """Fetch and compute one binding. A failed share or a bad query returns ok=False."""
+        pinned_rows = request_state.current().pinned_rows
+        pinned = request_state.current().pinned_hit
+        if pinned_rows and pinned is not None and table.id == pinned.table.id:
+            from grund.country_row import with_rows
+
+            binding = with_rows(binding, pinned_rows)
         edition = binding.edition
         try:
             validate(edition, binding.selections)
@@ -1618,13 +1705,21 @@ class Engine:
         population_row = None
         try:
             payload, plan_audit = self._fetch(table, edition, binding)
+            fetch = last_fetch()
             if binding.operation == "per_capita":
                 population_row = self._population(parsed, binding)
+                if last_fetch().stale:
+                    fetch = last_fetch()
         except (PlanError, ArithmeticError, ValidationError) as exc:
             return {"ok": False, "detail": str(exc)}
         except PxWebError as exc:
             transport = exc.status in {None, 429} or (exc.status is not None and exc.status >= 500)
-            return {"ok": False, "detail": str(exc), "transport": transport}
+            return {
+                "ok": False,
+                "detail": str(exc),
+                "transport": transport,
+                "rate_limited": bool(getattr(exc, "rate_limited", False)),
+            }
         except Exception as exc:  # noqa: BLE001 - a failed fetch is a refusal, not a made-up number
             return {"ok": False, "detail": str(exc), "transport": True}
         rows = extract_rows(payload, edition)
@@ -1673,6 +1768,7 @@ class Engine:
             "planner_notes": list(binding.notes),
             "plan_audit": plan_audit,
             "context_blocked": context_blocked,
+            "fetch": fetch,
         }
 
     def _ambiguous(self, parsed: ParsedQuestion, ranked: list[tuple[float, Binding, Table]]) -> bool:
@@ -1788,6 +1884,7 @@ class Engine:
         plan.read("pxweb.query", arguments)
         plan.lock()
         plan.check_call("pxweb.query", arguments)
+        clear_fetch()
         payload = self.client.post_json(edition.url, body)
         return payload, plan.audit
 
@@ -1903,6 +2000,7 @@ class Engine:
             "planner_notes": planner_notes,
             "plan_audit": plan_audit,
             "footnote_withheld_from_model": withheld,
+            **cell_unit(edition, payload, cells),
         }
 
     def _closed_historical(self, stated_id, other_id) -> bool:
@@ -1969,9 +2067,106 @@ class Engine:
         source["index_table"] = index_table
         chosen["source"] = source
         chosen["features"] = feature_row(question, chosen, [other], index_table)
-        if getattr(self, "_defer_present", False):
+        if request_state.current().defer_present:
             return chosen
         return self._maybe_abstain(parsed, chosen)
+
+    def _country_row(self, parsed: ParsedQuestion, result: dict, *, mark_stated: bool = False) -> dict | None:
+        """The named country's row in the table that carries it, or a refusal. None keeps the result.
+
+        With mark_stated, a result that already states the named row comes
+        back marked, so a path that alone read that row is not withheld.
+        """
+        from grund.country_row import country_decide, states_row
+        from grund.sibling_measure import asked_years, covers
+
+        decision = country_decide(
+            parsed.text,
+            result,
+            self.catalogue,
+            asked_years(parsed.text),
+            lambda stem, years: covers(self.catalogue, stem, years),
+        )
+        if decision.action == "stated":
+            if not mark_stated:
+                return None
+            marked = dict(result)
+            marked["source"] = {**(result.get("source") or {}), "country_row": True}
+            return marked
+        if decision.action == "keep":
+            return None
+        switched = None
+        table = None
+        if decision.action == "switch":
+            table = self.catalogue.by_id.get(decision.table + ".px") or self.catalogue.by_id.get(decision.table)
+        if table is not None:
+            from grund_index.catalogue import Hit
+
+            hit = Hit(table=table, score=1.0, bm25=0.0, cosine=0.0, value_boost=0.0)
+            switched = self._ask_pinned(
+                parsed.text,
+                parsed.language,
+                hit,
+                sibling_lock=True,
+                pinned_rows={decision.variable: decision.code},
+            )
+        if switched is not None and states_row(switched, decision.variable, decision.code):
+            return switched
+        detail = decision.detail or f"country: the {decision.label} row of {decision.table} could not be stated"
+        refused = self._finish_refusal(
+            parsed,
+            "no_table",
+            list(result.get("rails") or []),
+            time.perf_counter(),
+            list(result.get("candidates") or []),
+            detail=detail,
+            planner="country-row",
+        )
+        refused["elapsed_ms"] = result.get("elapsed_ms")
+        refused["features"] = result.get("features")
+        refused["path_pair"] = result.get("path_pair")
+        return refused
+
+    def _refuse_after(self, parsed: ParsedQuestion, result: dict, detail: str, planner: str) -> dict:
+        refused = self._finish_refusal(
+            parsed,
+            "no_table",
+            list(result.get("rails") or []),
+            time.perf_counter(),
+            list(result.get("candidates") or []),
+            detail=detail,
+            planner=planner,
+        )
+        refused["elapsed_ms"] = result.get("elapsed_ms")
+        refused["features"] = result.get("features")
+        refused["path_pair"] = result.get("path_pair")
+        return refused
+
+    def _switch_row(self, parsed: ParsedQuestion, result: dict, variable: str, code: str, detail: str, planner: str) -> dict:
+        """The same table with one stated row replaced, or a refusal."""
+        from grund.country_row import states_row
+        from grund_index.catalogue import Hit
+
+        stem = str(result.get("table_id") or "").removesuffix(".px")
+        table = self.catalogue.by_id.get(stem + ".px") or self.catalogue.by_id.get(stem)
+        switched = None
+        if table is not None:
+            hit = Hit(table=table, score=1.0, bm25=0.0, cosine=0.0, value_boost=0.0)
+            switched = self._ask_pinned(parsed.text, parsed.language, hit, sibling_lock=True, pinned_rows={variable: code})
+        if switched is None or not states_row(switched, variable, code):
+            return self._refuse_after(parsed, result, f"{detail}, but that row could not be stated", planner)
+        from grund.measure_carried import carried_decide
+        from grund.unit_subject import subject_missing, unit_decide
+
+        for decide_row in (unit_decide, carried_decide):
+            again = decide_row(parsed.text, switched, self.catalogue)
+            if again.action != "keep":
+                return self._refuse_after(parsed, result, f"{detail}, and then {again.detail}", planner)
+        why = subject_missing(parsed.text, switched, self.catalogue)
+        if why:
+            return self._refuse_after(parsed, result, f"{detail}, and then {why}", planner)
+        switched["source"] = {**(switched.get("source") or {}), "row_switch": detail}
+        return switched
 
     def _maybe_abstain(self, parsed: ParsedQuestion, result: dict) -> dict:
         from grund.calibrate import should_abstain
@@ -2009,6 +2204,135 @@ class Engine:
                 list(result.get("candidates") or []),
                 detail="measure does not match",
                 planner="measure-guard",
+            )
+            refused["elapsed_ms"] = result.get("elapsed_ms")
+            refused["features"] = result.get("features")
+            refused["path_pair"] = result.get("path_pair")
+            return refused
+        from grund.sibling_measure import Decision, cell_labels, decide, unit_conflict
+
+        if unit_conflict(parsed.text, result):
+            refused = self._finish_refusal(
+                parsed,
+                "no_table",
+                list(result.get("rails") or []),
+                time.perf_counter(),
+                list(result.get("candidates") or []),
+                detail="unit does not match",
+                planner="sibling-measure",
+            )
+            refused["elapsed_ms"] = result.get("elapsed_ms")
+            refused["features"] = result.get("features")
+            refused["path_pair"] = result.get("path_pair")
+            return refused
+        if not request_state.current().sibling_lock:
+            countried = self._country_row(parsed, result)
+            if countried is not None:
+                return countried
+            from grund.measure_carried import carried_decide
+            from grund.unit_subject import subject_missing, unit_decide
+
+            for decide_row, planner in ((unit_decide, "unit-carried"), (carried_decide, "measure-carried")):
+                decision = decide_row(parsed.text, result, self.catalogue)
+                if decision.action == "switch":
+                    return self._switch_row(parsed, result, decision.variable, decision.code, decision.detail, planner)
+                if decision.action == "refuse":
+                    return self._refuse_after(parsed, result, decision.detail, planner)
+            why = subject_missing(parsed.text, result, self.catalogue)
+            if why:
+                return self._refuse_after(parsed, result, why, "subject-carried")
+            # A table the country rule pinned was already chosen among those
+            # measuring the same thing that carry the named row.
+            pinned = bool((result.get("source") or {}).get("country_row"))
+            decision = Decision("keep") if pinned else decide(
+                parsed.text,
+                str(result.get("table_id") or ""),
+                self.catalogue,
+                cell_labels(result) or None,
+            )
+            if decision.action == "refuse":
+                refused = self._finish_refusal(
+                    parsed,
+                    "no_table",
+                    list(result.get("rails") or []),
+                    time.perf_counter(),
+                    list(result.get("candidates") or []),
+                    detail="measure phrase is not unique",
+                    planner="sibling-measure",
+                )
+                refused["elapsed_ms"] = result.get("elapsed_ms")
+                refused["features"] = result.get("features")
+                refused["path_pair"] = result.get("path_pair")
+                return refused
+            if decision.action == "switch" and decision.table:
+                table = self.catalogue.by_id.get(decision.table + ".px") or self.catalogue.by_id.get(decision.table)
+                if table is None:
+                    return result
+                from grund_index.catalogue import Hit
+
+                hit = Hit(table=table, score=1.0, bm25=0.0, cosine=0.0, value_boost=0.0)
+                switched = self._ask_pinned(parsed.text, parsed.language, hit, sibling_lock=True)
+                if switched.get("refused") or switched.get("value") in (None, ""):
+                    refused = self._finish_refusal(
+                        parsed,
+                        "no_table",
+                        list(result.get("rails") or []),
+                        time.perf_counter(),
+                        list(result.get("candidates") or []),
+                        detail="measure phrase",
+                        planner="sibling-measure",
+                    )
+                    refused["elapsed_ms"] = result.get("elapsed_ms")
+                    return refused
+                return switched
+            from grund.row_guard import label_decide
+            from grund.sibling_measure import asked_years, covers, measure_words
+
+            labelled = label_decide(
+                parsed.text,
+                result,
+                self.catalogue,
+                measure_words(parsed.text),
+                asked_years(parsed.text),
+                lambda stem, years: covers(self.catalogue, stem, years),
+            )
+            if labelled.action != "keep":
+                switched = None
+                table = None
+                if labelled.action == "switch":
+                    table = self.catalogue.by_id.get(labelled.table + ".px") or self.catalogue.by_id.get(labelled.table)
+                if table is not None:
+                    from grund_index.catalogue import Hit
+
+                    hit = Hit(table=table, score=1.0, bm25=0.0, cosine=0.0, value_boost=0.0)
+                    switched = self._ask_pinned(parsed.text, parsed.language, hit, sibling_lock=True)
+                if switched is not None and not switched.get("refused") and switched.get("value") not in (None, ""):
+                    return switched
+                refused = self._finish_refusal(
+                    parsed,
+                    "no_table",
+                    list(result.get("rails") or []),
+                    time.perf_counter(),
+                    list(result.get("candidates") or []),
+                    detail=f"the stated cell does not carry {labelled.label}",
+                    planner="row-guard",
+                )
+                refused["elapsed_ms"] = result.get("elapsed_ms")
+                refused["features"] = result.get("features")
+                refused["path_pair"] = result.get("path_pair")
+                return refused
+        from grund.row_guard import row_reason
+
+        row = row_reason(parsed.text, result, self.catalogue, exempt=tuple(request_state.current().pinned_rows or ()))
+        if row:
+            refused = self._finish_refusal(
+                parsed,
+                "no_table",
+                list(result.get("rails") or []),
+                time.perf_counter(),
+                list(result.get("candidates") or []),
+                detail=row,
+                planner="row-guard",
             )
             refused["elapsed_ms"] = result.get("elapsed_ms")
             refused["features"] = result.get("features")
@@ -2338,6 +2662,24 @@ class Engine:
         from grund_rails.cell_claim import question_match_claims
 
         hybrid = run_hybrid_safe(self, question, parsed, [], started)
+        from grund.country_row import country_ranker
+
+        pinned_rows = request_state.current().pinned_rows
+        if not pinned_rows:
+            # A country the stated cell does not carry is decided before the
+            # paths are compared: neither path's total is the answer.
+            stated = next((path for path in (ranker, hybrid) if not path.get("refused") and path.get("value") not in (None, "")), None)
+            if stated is not None:
+                countried = self._country_row(parsed, stated, mark_stated=True)
+                if countried is not None and (countried.get("source") or {}).get("country_row") and not countried.get("refused"):
+                    other = hybrid if stated is ranker else ranker
+                    return self._gated(question, parsed, countried, other, "country-row")
+                if countried is not None:
+                    return countried
+        for path, other in ((ranker, hybrid), (hybrid, ranker)):
+            rowed = country_ranker(path, pinned_rows)
+            if rowed is not None:
+                return self._gated(question, parsed, rowed, other, "country-row")
         from grund.judgesim_fix import enabled as judgesim_enabled
         from grund.judgesim_fix import gate_choice
 
@@ -2434,6 +2776,9 @@ class Engine:
         shared = share_ranker(question, parsed.language, ranker)
         if shared is not None:
             return self._gated(question, parsed, shared, hybrid, "is-share")
+        shared = share_ranker(question, parsed.language, hybrid)
+        if shared is not None:
+            return self._gated(question, parsed, shared, ranker, "is-share")
         from grund.isjobsex import jobsex_ranker
 
         jobsex = jobsex_ranker(question, parsed.language, ranker)
@@ -2533,6 +2878,19 @@ class Engine:
                         "reason": "disagreed",
                     }
                 )
+        if (ranker.get("rate_limited") or hybrid.get("rate_limited")) and ranker.get("value") in (None, "") and hybrid.get("value") in (None, ""):
+            refused = self._finish_refusal(
+                parsed,
+                "rate_limit",
+                rail_log,
+                started,
+                links,
+                detail=ranker.get("detail") or hybrid.get("detail"),
+                planner="gate",
+                sources=links,
+            )
+            refused["path_pair"] = _path_pair(ranker, hybrid)
+            return refused
         refused = self._finish_refusal(
             parsed,
             "no_table",
@@ -2565,6 +2923,8 @@ class Engine:
             refusal_kind = "clarify"
         elif kind == "out_of_scope":
             refusal_kind = "out_of_scope"
+        elif kind == "rate_limit":
+            refusal_kind = "rate_limit"
         else:
             refusal_kind = "no_table"
         text = refusal(parsed.language, refusal_kind)
@@ -2610,6 +2970,7 @@ class Engine:
             "sources": list(sources or []),
             "detail": detail,
             "planner": planner,
+            "rate_limited": kind == "rate_limit",
             "elapsed_ms": int((time.perf_counter() - started) * 1000),
         }
 

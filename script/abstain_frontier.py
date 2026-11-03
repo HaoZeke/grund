@@ -120,7 +120,7 @@ def main() -> None:
 
     engine = Engine(
         Catalogue.load(Path("data/index")),
-        client=PxWebClient(cache_dir=Path("data/cache"), rate=4.0),
+        client=PxWebClient(cache_dir=Path("data/cache")),
         planner="deterministic",
     )
     jobs = [

@@ -38,6 +38,75 @@ def _asked(question: str) -> str:
     return fold(question or "")
 
 
+def migration_code(variable, question: str) -> str | None:
+    """The flow row on whichever external-migration table this edition is.
+
+    MAN01400 numbers the rows 1/2/3. MAN01401 numbers the same rows 0/1/2.
+    A code that is not on this variable is matched by its label instead.
+    """
+    legacy = flow_code(question)
+    if not legacy:
+        return None
+    key = fold(f"{getattr(variable, 'code', '')} {getattr(variable, 'text', '')}")
+    if "flutning" not in key and re.search(r"\bmigration\b", key) is None:
+        return None
+    values = list(getattr(variable, "values", []) or [])
+    kind = {"1": "net", "2": "in", "3": "out"}.get(legacy, "")
+    for code, label in values:
+        plain = fold(str(label or ""))
+        net = "net" in plain or "netto" in plain or "umfram" in plain
+        arrived = "adflutt" in plain or "immigration" in plain
+        left = "brott" in plain or "emigration" in plain
+        if kind == "net" and net:
+            return str(code)
+        if kind == "in" and arrived and not net and not left:
+            return str(code)
+        if kind == "out" and left and not net:
+            return str(code)
+    return None
+
+
+def sex_total_code(variable, question: str) -> str | None:
+    """A flow that does not name a sex is both sexes."""
+    if flow_code(question) is None or sex_code(question) is not None:
+        return None
+    key = fold(f"{getattr(variable, 'code', '')} {getattr(variable, 'text', '')}")
+    if not re.search(r"\b(kyn|sex)\b", key):
+        return None
+    for code, label in getattr(variable, "values", []) or []:
+        if fold(str(label or "")) in {"total", "alls", "all", "males and females", "karlar og konur"}:
+            return str(code)
+    return None
+
+
+def citizenship_total_code(variable, question: str) -> str | None:
+    """A flow that does not name a citizenship is the total, not Icelandic citizens."""
+    if flow_code(question) is None or citizenship_code(question) is not None:
+        return None
+    key = fold(f"{getattr(variable, 'code', '')} {getattr(variable, 'text', '')}")
+    if "rikisfang" not in key and "citizenship" not in key:
+        return None
+    for code, label in getattr(variable, "values", []) or []:
+        if fold(str(label or "")) in {"total", "alls", "all"}:
+            return str(code)
+    return None
+
+
+def age_total_code(variable, question: str) -> str | None:
+    """'All ages' is the age total, not one year of age."""
+    text = fold(question or "")
+    if "all ages" not in text and "allir aldur" not in text and "aldurshop" not in text:
+        return None
+    key = fold(f"{getattr(variable, 'code', '')} {getattr(variable, 'text', '')}")
+    if "aldur" not in key and re.search(r"\bage\b", key) is None:
+        return None
+    for code, label in getattr(variable, "values", []) or []:
+        plain = fold(str(label or ""))
+        if plain in {"total", "alls", "all"}:
+            return str(code)
+    return None
+
+
 def flow_code(question: str) -> str | None:
     """External-migration type code, or nothing when this is not a flow question."""
     if not enabled():
@@ -115,7 +184,10 @@ def apply_is_origin(catalogue, hits: list[Hit], question: str, language: str | N
     """Lead with the origin table or the external-migration table."""
     if not enabled():
         return hits
-    stem = "MAN43000" if origin_code(question) else ("MAN01400" if flow_code(question) else "")
+    # The age table is the flow the question can pin to a total. The table
+    # without an age dimension stays available when the age table is absent.
+    flow_stem = "MAN01401" if flow_code(question) else ""
+    stem = "MAN43000" if origin_code(question) else flow_stem
     if not stem:
         return hits
     table = _table(catalogue, stem)
@@ -166,7 +238,7 @@ def origin_ranker(question: str, language: str | None, ranker: dict) -> dict | N
         ]
         if origin and any(label in {"total", "alls", "all"} for label in origin):
             return None
-    elif flow_code(question) and stem == "MAN01400":
+    elif flow_code(question) and stem in {"MAN01400", "MAN01401"}:
         pass
     else:
         return None

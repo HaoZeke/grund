@@ -263,6 +263,10 @@ def refusal(language: str, kind: str) -> str:
         if language == "is":
             return "Ég næ ekki að velja eina töflu án þess að giska. Tilgreindu tímabil, svæði eða hvort þú eigir við sveitarfélag eða landshluta."
         return "I can't choose one table without guessing. Name the period, the area, or whether you mean a municipality or a region."
+    if kind == "rate_limit":
+        if language == "is":
+            return "Hagstofa Íslands takmarkar fjölda beiðna. Reyndu aftur eftir eina mínútu."
+        return "Statistics Iceland is rate-limiting requests. Try again in a minute."
     if kind == "out_of_scope":
         if language == "is":
             return (

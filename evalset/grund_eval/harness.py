@@ -176,7 +176,7 @@ def main(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
     questions = [json.loads(line) for line in args.questions.read_text(encoding="utf-8").splitlines() if line.strip()]
     catalogue = Catalogue.load(args.index)
-    client = PxWebClient(cache_dir=Path("data/cache"), rate=4.0)
+    client = PxWebClient(cache_dir=Path("data/cache"))
     engine = Engine(catalogue, client=client, planner=args.planner)
     payload = run(questions, engine, client)
     chat = ChatClient()

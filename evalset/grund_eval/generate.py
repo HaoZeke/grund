@@ -649,7 +649,7 @@ def main(argv: list[str] | None = None) -> None:
     from grund_index.build import load_catalog
 
     tables = load_catalog(args.catalog)
-    client = PxWebClient(cache_dir=Path("data/cache"), rate=4.0)
+    client = PxWebClient(cache_dir=Path("data/cache"))
     questions = generate(tables, client, seed=args.seed)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w", encoding="utf-8") as handle:

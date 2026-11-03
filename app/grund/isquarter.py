@@ -223,13 +223,30 @@ def quarter_ranker(question: str, language: str | None, ranker: dict) -> dict | 
     return chosen
 
 
+def _hours_question(question: str, language: str | None) -> bool:
+    """Actual weekly hours in one quarter. Usual hours and a year stay put."""
+    if not enabled():
+        return False
+    if language not in {None, "", "is", "en"}:
+        return False
+    text = fold(question or "")
+    if "arsfjord" not in text and re.search(r"\bquarter\b", text) is None:
+        return False
+    if "usual" in text or "venjuleg" in text:
+        return False
+    return "hours actually worked" in text or "vinnustund" in text or "hours worked" in text
+
+
 def apply_is_quarter(catalogue, hits: list[Hit], question: str, language: str | None) -> list[Hit]:
-    if quarter_kind(question, language) is None:
+    stem = "VIN01001" if _hours_question(question, language) else ""
+    if not stem and quarter_kind(question, language):
+        stem = _TABLE
+    if not stem:
         return hits
-    table = catalogue.by_id.get(_TABLE + ".px") or catalogue.by_id.get(_TABLE)
+    table = catalogue.by_id.get(stem + ".px") or catalogue.by_id.get(stem)
     if table is None:
         return hits
-    kept = [hit for hit in hits if _stem(hit.table.id) != _TABLE]
+    kept = [hit for hit in hits if _stem(hit.table.id) != stem]
     score = max((hit.score for hit in kept), default=0.0) + 1.0
     lead = Hit(table=table, score=score, bm25=0.0, cosine=0.0, value_boost=0.0)
     return [lead] + kept

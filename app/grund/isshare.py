@@ -217,8 +217,29 @@ def share_cell_clears(question: str, language: str | None, produced: dict, verdi
         return False
     if abs(stated - (part / whole * 100.0)) > 0.05:
         return False
-    wanted = "karl" if side == "male" else "kon"
-    return any(wanted in label for label in labels)
+    wanted = ("karl", "men", "male") if side == "male" else ("kon", "wom", "female")
+    return any(any(bit in label for bit in wanted) for label in labels)
+
+
+def _share_arithmetic(result: dict, side: str) -> bool:
+    """True when the stated percent is the smaller cited count over the larger."""
+    numbers = []
+    for claim in result.get("claims") or []:
+        if not isinstance(claim, dict):
+            continue
+        for cell in claim.get("cells") or []:
+            if isinstance(cell, dict):
+                number = _number(cell.get("value"))
+                if number is not None:
+                    numbers.append(number)
+    stated = _number(result.get("value"))
+    if stated is None or len(numbers) < 2:
+        return False
+    numbers.sort()
+    part, whole = numbers[0], numbers[-1]
+    if whole == 0 or part > whole or part < 0:
+        return False
+    return abs(stated - (part / whole * 100.0)) <= 0.05
 
 
 def share_ranker(question: str, language: str | None, ranker: dict) -> dict | None:
@@ -231,9 +252,9 @@ def share_ranker(question: str, language: str | None, ranker: dict) -> dict | No
     if _stem(str(ranker.get("table_id") or "")) != _TABLE:
         return None
     operation = str(ranker.get("operation") or "")
-    if operation not in {"share", "share_percent"}:
-        return None
     labels = _labels(ranker)
+    if operation not in {"share", "share_percent"} and not _share_arithmetic(ranker, side):
+        return None
     wanted = ("karl", "men", "male") if side == "male" else ("kon", "wom", "female")
 
     def _label_has(label: str) -> bool:

@@ -78,7 +78,6 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--scorer", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--cache", type=Path, default=Path("data/cache"))
-    parser.add_argument("--rate", type=float, default=4.0)
     args = parser.parse_args(argv)
     scorer = _load_scorer(args.scorer)
     questions = [json.loads(line) for line in args.questions.read_text(encoding="utf-8").splitlines() if line.strip()]
@@ -87,7 +86,7 @@ def main(argv: list[str] | None = None) -> None:
     engine = LangEngine(
         catalogue,
         retrieval,
-        client=PxWebClient(cache_dir=args.cache, rate=args.rate),
+        client=PxWebClient(cache_dir=args.cache),
         planner="deterministic",
     )
     rows = []

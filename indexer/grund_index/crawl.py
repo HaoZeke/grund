@@ -21,7 +21,7 @@ import urllib.parse
 from pathlib import Path
 from typing import Any
 
-from grund_index.client import BASE, PxWebClient, PxWebError, RateLimiter
+from grund_index.client import BASE, DEFAULT_RATE, SAFE_CALLS, SAFE_WINDOW, PxWebClient, PxWebError, RateLimiter
 
 # Folders fetched before the full walk. Paths are API id segments, not titles.
 PRIORITY_FOLDERS: list[list[str]] = [
@@ -220,7 +220,12 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description="Crawl Statistics Iceland PxWeb metadata")
     parser.add_argument("--out", type=Path, default=Path("data/catalog/tables.jsonl"))
     parser.add_argument("--cache", type=Path, default=Path("data/cache"))
-    parser.add_argument("--rate", type=float, default=6.0)
+    parser.add_argument(
+        "--rate",
+        type=float,
+        default=DEFAULT_RATE,
+        help=f"calls per second, default one per {1 / DEFAULT_RATE:g} s, at most {SAFE_CALLS} per {SAFE_WINDOW:g} s",
+    )
     parser.add_argument("--languages", default="en,is")
     parser.add_argument("--priority-only", action="store_true")
     parser.add_argument("--skip-priority", action="store_true")

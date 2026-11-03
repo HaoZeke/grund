@@ -28,6 +28,8 @@ export type Source = {
   revised?: boolean;
   operation?: string;
   notes?: string[];
+  unit?: string;
+  unit_from?: "row" | "published" | "title" | "";
 };
 
 const MONTHS: Record<Language, string[]> = {
@@ -199,7 +201,11 @@ function unitFrom(source: Source | null | undefined, language: Language, derived
     .filter((label) => UNIT_NAME.test(fold(`${label.variable_text || ""} ${label.variable || ""}`).trim()))
     .map((label) => label.label || "")
     .filter((label) => label && !TOTAL.test(fold(label)));
-  return [...new Set(units)].join(", ");
+  if (units.length) return [...new Set(units)].join(", ");
+  const unit = (source?.unit || "").trim();
+  if (!unit) return "";
+  if (source?.unit_from === "title") return language === "is" ? `${unit} (mæling úr heiti töflu)` : `${unit} (measure, from the table title)`;
+  return unit;
 }
 
 export function computedLine(source: Source | null | undefined, operation: string | null | undefined, language: Language): string | null {

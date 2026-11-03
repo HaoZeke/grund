@@ -13,8 +13,17 @@ import re
 from grund_index.catalogue import Hit
 from grund_index.textutil import fold
 
-_TABLE = "THJ01102"
+_CURRENT = "THJ01102"
+_CONSTANT = "THJ01103"
 _BLOCK = ("utflutn", "innflutn", "voruskipt", "thjodartekj", "hlutfall", "utgjold", "prosent", "percentage", "verdur", "capita", "deflator", "expenditure")
+
+
+def table_stem(question: str) -> str:
+    """Constant prices are the constant-price accounts. Other GDP is current prices."""
+    text = fold(question or "").replace("-", " ")
+    if any(phrase in text for phrase in ("constant price", "fast verdlag", "fostu verd", "a fostu")):
+        return _CONSTANT
+    return _CURRENT
 
 
 def enabled() -> bool:
@@ -119,7 +128,7 @@ def gdp_cell_clears(question: str, language: str | None, produced: dict, verdict
     if reason not in {"cited cell does not match the question", "breakdown not asked for"}:
         return False
     table = produced.get("table")
-    if _stem(str(getattr(table, "id", "") or "")) != _TABLE:
+    if _stem(str(getattr(table, "id", "") or "")) != table_stem(question):
         return False
     years = re.findall(r"(?:19|20)\d{2}", question or "")
     labels: list[str] = []
@@ -148,7 +157,7 @@ def gdp_ranker(question: str, language: str | None, ranker: dict) -> dict | None
         return None
     if ranker.get("refused") or ranker.get("value") in (None, ""):
         return None
-    if _stem(str(ranker.get("table_id") or "")) != _TABLE:
+    if _stem(str(ranker.get("table_id") or "")) != table_stem(question):
         return None
     labels = _labels(ranker)
     if not any(_line_is_gdp(label) for label in labels):
@@ -169,7 +178,8 @@ def gdp_ranker(question: str, language: str | None, ranker: dict) -> dict | None
 def apply_is_gdp(catalogue, hits: list[Hit], question: str, language: str | None) -> list[Hit]:
     if not wants_gdp(question, language):
         return hits
-    table = catalogue.by_id.get(_TABLE + ".px") or catalogue.by_id.get(_TABLE)
+    stem = table_stem(question)
+    table = catalogue.by_id.get(stem + ".px") or catalogue.by_id.get(stem)
     if table is None:
         return hits
     from grund.bind import bind
@@ -193,7 +203,7 @@ def apply_is_gdp(catalogue, hits: list[Hit], question: str, language: str | None
         picked.extend(str(item) for item in (selection.get("selection") or {}).get("values") or [])
     if line not in picked:
         return hits
-    kept = [hit for hit in hits if _stem(hit.table.id) != _TABLE]
+    kept = [hit for hit in hits if _stem(hit.table.id) != stem]
     score = max((hit.score for hit in kept), default=0.0) + 1.0
     lead = Hit(table=table, score=score, bm25=0.0, cosine=0.0, value_boost=0.0)
     return [lead] + kept

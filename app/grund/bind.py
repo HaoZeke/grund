@@ -370,6 +370,11 @@ def _covers_specific_words(parsed: ParsedQuestion, edition: Edition, chosen: dic
 
         if pop_word_covered(token, parsed.text, parsed.language, edition, chosen):
             continue
+        from grund.isjobs import survey_unemployment
+
+        # The annual labour-force survey table does not print that phrase.
+        if survey_unemployment(parsed.text, parsed.language) and token.startswith("vinnumarkadsrannsokn"):
+            continue
         return False
     return True
 
@@ -732,14 +737,35 @@ def _postcode_slice(label: str, parsed: ParsedQuestion) -> bool:
 
 def _named_origin(variable: Variable, parsed: ParsedQuestion) -> str | None:
     """Immigrant stock or the external-migration type. Off unless the flag is on."""
-    from grund.isorigin import citizenship_code, enabled, flow_code, origin_code, sex_code
+    from grund.isorigin import (
+        age_total_code,
+        citizenship_code,
+        citizenship_total_code,
+        enabled,
+        flow_code,
+        migration_code,
+        origin_code,
+        sex_code,
+        sex_total_code,
+    )
 
     if not enabled():
         return None
     key = fold(f"{variable.text} {variable.code}")
+    aged = age_total_code(variable, parsed.text)
+    if aged is not None:
+        return aged
+    citizens = citizenship_total_code(variable, parsed.text)
+    if citizens is not None:
+        return citizens
+    sexes = sex_total_code(variable, parsed.text)
+    if sexes is not None:
+        return sexes
     if origin_code(parsed.text) and ("bakgrunn" in key or re.search(r"\borigin\b", key) or "background" in key):
         return origin_code(parsed.text)
-    code = flow_code(parsed.text)
+    code = migration_code(variable, parsed.text)
+    if code is None:
+        code = flow_code(parsed.text)
     if code and ("flutning" in key or re.search(r"\bmigration\b", key)):
         return code
     if (origin_code(parsed.text) or code) and re.search(r"\b(kyn|sex)\b", key):
@@ -907,6 +933,17 @@ def _select_category(
             score, overlap = 0.0, 0
         else:
             score, overlap = _value_score(query, parsed.folded, label)
+            # Words copied from the table title do not name a row.
+            # "opening days" is the table, not "No regular opening days".
+            if score > 0:
+                forms = _title_forms(title, variable)
+                distinctive = [
+                    token
+                    for token in tokens(label)
+                    if len(token) >= 4 and _token_hit(token, query) and not _query_token_ignored(token, forms)
+                ]
+                if not distinctive:
+                    score, overlap = 0.0, 0
         ranked.append((score, overlap, code, label))
     title_tokens = set(tokens(title))
     adjusted: list[tuple[float, int, str, str]] = []
@@ -979,9 +1016,14 @@ def _select_category(
             if not winner_is_total:
                 for code, label in pool:
                     other = aliases.get(code, "")
-                    texts = [label] + ([other] if other else [])
-                    if not any(aggregate_label(text) for text in texts):
+                    # "Total" is the unnamed row. "Samtals úrgangur" is one
+                    # measure that happens to start with the total word.
+                    # The other language may still mark the headline that way.
+                    if other and aggregate_label(other):
+                        pass
+                    elif not is_total(label):
                         continue
+                    texts = [label] + ([other] if other else [])
                     if any(_question_mentions(text, query) for text in texts):
                         break
                     return [code]
@@ -1035,10 +1077,10 @@ def _select_category(
                 if extra:
                     chosen.append(code)
         return list(dict.fromkeys(chosen))
-    named = _category_named_in_question(variable, parsed.folded, title)
+    named = _category_named_in_question(variable, parsed.text, title)
     if named is not None:
         return [named]
-    if _question_forbids_total(variable, parsed.folded):
+    if _question_forbids_total(variable, parsed.text, title):
         return None
     for code, label in variable.values:
         if is_total(label) or fold(code) in {"total", "samtals"}:
@@ -1121,8 +1163,16 @@ def _category_named_in_question(variable: Variable, asked: str, title: str = "")
     """A non-total label the question names, including a town inside a longer name.
 
     A word of the table title, or the dimension itself ("by region"), is not
-    that name. The match may be a lemma of the printed label.
+    that name. The match may be a lemma of the printed label. A list number
+    is not part of the name: ``1. Flug`` is the row ``flugi`` asks for.
     """
+    from grund_lang.pxtools import match_value_codes
+
+    named = match_value_codes(variable.values, asked, title)
+    if len(named) == 1:
+        return named[0]
+    if len(named) > 1:
+        return None
     covered = _title_forms(title, variable)
     words = []
     for word in re.findall(r"[a-z0-9]+", asked):
@@ -1166,9 +1216,16 @@ def _stem_names_label(stem: str, folded: str) -> bool:
     return rest in {"", "kaupstadur", "urborg", "borg", "baer"} or rest.startswith("kaupstad")
 
 
-def _question_forbids_total(variable: Variable, asked: str) -> bool:
+def _question_forbids_total(variable: Variable, asked: str, title: str = "") -> bool:
     """The question named a category, so Alls on this variable would be a different statistic."""
+    from grund.isbirths import specific_age
+    from grund_lang.pxtools import match_value_codes
+
+    if match_value_codes(variable.values, asked, title):
+        return True
     key = fold(f"{variable.text} {variable.code}")
+    if specific_age(asked) and ("aldur" in key or re.search(r"\bage\b", key)):
+        return True
     if re.search(r"\bfyrsta\s+ari", asked) and re.search(r"\b(aldur|age)\b", key):
         return True
     if re.search(r"\b(erlend\w*|utlending\w*|foreign\w*)\b", asked) and any(

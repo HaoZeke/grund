@@ -13,6 +13,7 @@ from grund_index.catalogue import Hit
 from grund_index.textutil import fold
 
 _TABLE = "SAM01601"
+_HOTEL = "SAM01103"
 _REGION = (
     "hofudborg", "capital region", "sudurland", "nordurland", "austurland", "vesturland",
     "vestfird", "sudurnes", "westfjord", "northeast", "northwest", "southwest",
@@ -54,12 +55,67 @@ def stays_kind(question: str, language: str | None) -> str | None:
     return "total"
 
 
+def hotel_kind(question: str, language: str | None) -> str | None:
+    """Overnight stays or arrivals in hotels and guesthouses, not all accommodation."""
+    if not enabled():
+        return None
+    if language not in {None, "", "is", "en"}:
+        return None
+    text = fold(question or "")
+    if not any(mark in text for mark in ("hotel", "gistiheimil", "guesthouse")):
+        return None
+    if len(re.findall(r"(?:19|20)\d{2}", question or "")) != 1:
+        return None
+    foreign = any(mark in text for mark in ("erlend", "utlend", "foreign"))
+    arrivals = "gestakom" in text or re.search(r"\b(arrivals?|komur)\b", text) is not None
+    overnight = "gistin" in text or "overnight" in text or re.search(r"\bnights?\b", text) is not None
+    if foreign and overnight:
+        return "foreign-overnight"
+    if arrivals and not overnight:
+        return "arrivals"
+    if overnight:
+        return "overnight"
+    return None
+
+
+def _hotel_code(variable, question: str, language: str | None, title: str) -> str | None:
+    kind = hotel_kind(question, language)
+    if kind is None:
+        return None
+    folded_title = fold(title or "")
+    if "hotel" not in folded_title and "gistiheimil" not in folded_title:
+        return None
+    blob = fold(f"{getattr(variable, 'code', '')} {getattr(variable, 'text', '')}")
+    hits = []
+    for code, label in getattr(variable, "values", []) or []:
+        plain = fold(str(label or ""))
+        if "manud" in blob or re.search(r"\bmonth\b", blob):
+            if plain in {"total", "alls"}:
+                hits.append(str(code))
+        elif "rikisfang" in blob or "citizen" in blob:
+            if kind == "foreign-overnight" and ("foreign" in plain or "utlending" in plain):
+                hits.append(str(code))
+            elif kind != "foreign-overnight" and plain in {"total", "alls"}:
+                hits.append(str(code))
+        elif "eining" in blob or re.search(r"\bunit\b", blob):
+            if kind == "arrivals" and ("arrival" in plain or "gestakom" in plain):
+                hits.append(str(code))
+            elif kind != "arrivals" and ("overnight" in plain or "gistin" in plain):
+                hits.append(str(code))
+    if len(hits) == 1:
+        return hits[0]
+    return None
+
+
 def _title_ok(title: str) -> bool:
     folded = fold(title or "")
     return "gistin" in folded or "overnight" in folded
 
 
 def stays_value_code(variable, question: str, language: str | None, title: str) -> str | None:
+    hotel = _hotel_code(variable, question, language, title)
+    if hotel is not None:
+        return hotel
     kind = stays_kind(question, language)
     if kind is None or not _title_ok(title):
         return None
@@ -177,12 +233,15 @@ def stays_ranker(question: str, language: str | None, ranker: dict) -> dict | No
 
 
 def apply_is_stays(catalogue, hits: list[Hit], question: str, language: str | None) -> list[Hit]:
-    if stays_kind(question, language) is None:
+    stem = _HOTEL if hotel_kind(question, language) else ""
+    if not stem and stays_kind(question, language):
+        stem = _TABLE
+    if not stem:
         return hits
-    table = catalogue.by_id.get(_TABLE + ".px") or catalogue.by_id.get(_TABLE)
+    table = catalogue.by_id.get(stem + ".px") or catalogue.by_id.get(stem)
     if table is None:
         return hits
-    kept = [hit for hit in hits if _stem(hit.table.id) != _TABLE]
+    kept = [hit for hit in hits if _stem(hit.table.id) != stem]
     score = max((hit.score for hit in kept), default=0.0) + 1.0
     lead = Hit(table=table, score=score, bm25=0.0, cosine=0.0, value_boost=0.0)
     return [lead] + kept

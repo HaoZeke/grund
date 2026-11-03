@@ -13,7 +13,16 @@ import re
 from grund_index.catalogue import Hit
 from grund_index.textutil import fold
 
-_TABLE = "THJ01102"
+_CURRENT = "THJ01102"
+_CONSTANT = "THJ01103"
+
+
+def table_stem(question: str) -> str:
+    """Constant-price exports and imports are on the constant-price accounts."""
+    text = fold(question or "").replace("-", " ")
+    if any(phrase in text for phrase in ("constant price", "fast verdlag", "fostu verd", "a fostu")):
+        return _CONSTANT
+    return _CURRENT
 
 
 def enabled() -> bool:
@@ -145,7 +154,7 @@ def trade_ranker(question: str, language: str | None, ranker: dict) -> dict | No
         return None
     if ranker.get("refused") or ranker.get("value") in (None, ""):
         return None
-    if _stem(str(ranker.get("table_id") or "")) != _TABLE:
+    if _stem(str(ranker.get("table_id") or "")) != table_stem(question):
         return None
     year = _asked_year(question)
     labels = _labels(ranker)
@@ -170,7 +179,7 @@ def trade_cell_clears(question: str, language: str | None, produced: dict, verdi
     if reason not in {"cited cell does not match the question", "breakdown not asked for"}:
         return False
     table = produced.get("table")
-    if _stem(str(getattr(table, "id", "") or "")) != _TABLE:
+    if _stem(str(getattr(table, "id", "") or "")) != table_stem(question):
         return False
     year = _asked_year(question)
     labels: list[str] = []
@@ -195,7 +204,8 @@ def trade_cell_clears(question: str, language: str | None, produced: dict, verdi
 def apply_is_trade(catalogue, hits: list[Hit], question: str, language: str | None) -> list[Hit]:
     if trade_kind(question, language) is None:
         return hits
-    table = catalogue.by_id.get(_TABLE + ".px") or catalogue.by_id.get(_TABLE)
+    stem = table_stem(question)
+    table = catalogue.by_id.get(stem + ".px") or catalogue.by_id.get(stem)
     if table is None:
         return hits
     from grund.bind import bind
@@ -219,7 +229,7 @@ def apply_is_trade(catalogue, hits: list[Hit], question: str, language: str | No
         picked.extend(str(item) for item in (selection.get("selection") or {}).get("values") or [])
     if line not in picked:
         return hits
-    kept = [hit for hit in hits if _stem(hit.table.id) != _TABLE]
+    kept = [hit for hit in hits if _stem(hit.table.id) != stem]
     score = max((hit.score for hit in kept), default=0.0) + 1.0
     lead = Hit(table=table, score=score, bm25=0.0, cosine=0.0, value_boost=0.0)
     return [lead] + kept

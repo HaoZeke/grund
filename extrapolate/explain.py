@@ -5,21 +5,25 @@ checked: verified (in the answer or question), fetched (in a tool result),
 computed (from calc), or inferred (tagged). Anything else is dropped."""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import ast, hashlib, hmac, json, os, operator, re, time, urllib.parse, urllib.request
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(_ROOT, "indexer"))
+import ast, hashlib, hmac, ipaddress, json, os, operator, re, socket, ssl, time, urllib.parse, urllib.request
+from grund_index.client import PxWebClient, PxWebError, pop_question_budget, push_question_budget
 try:
     import elab_guard
 except Exception:
     elab_guard = None
+import http.client as _httpclient
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-BASE = os.environ["GRUND_LLM_BASE_URL"].rstrip("/")
-MODEL = os.environ.get("GRUND_ELAB_MODEL") or os.environ["GRUND_LLM_MODEL"]
-KEY = os.environ["GRUND_LLM_API_KEY"]
+BASE = os.environ.get("GRUND_LLM_BASE_URL", "").rstrip("/")
+MODEL = os.environ.get("GRUND_ELAB_MODEL") or os.environ.get("GRUND_LLM_MODEL", "")
+KEY = os.environ.get("GRUND_LLM_API_KEY", "")
 HKEY = os.environ.get("GRUND_ELAB_HMAC_KEY", "").encode()
 TIMEOUT = float(os.environ.get("GRUND_LLM_TIMEOUT", "40"))
 LOG = os.environ.get("GRUND_ELAB_LOG", "/srv/log/extrapolate.jsonl")
 PX = {"en": "https://px.hagstofa.is/pxen/api/v1/en/", "is": "https://px.hagstofa.is/pxis/api/v1/is/"}
-MAX_STEPS = 6
+MAX_STEPS = int(os.environ.get("GRUND_ELAB_MAX_TOOLS", "12"))
 NUM = re.compile(r"(?<![\w])-?\d[\d.,]*\d%?|(?<![\w])\d%?")
 
 def norm(tok):
@@ -67,14 +71,22 @@ def calc(expr):
     if len(expr) > 300: raise ValueError("expression too long")
     return round(ev(ast.parse(expr, mode="eval")), 6)
 
+_PX = None
+def px_client():
+    global _PX
+    if _PX is None:
+        cache = os.environ.get("GRUND_PX_CACHE") or os.path.join(_ROOT, "data", "cache")
+        _PX = PxWebClient(cache_dir=cache)
+    return _PX
+
 def http(url, body=None):
     u = urllib.parse.urlparse(url)
     if u.scheme != "https" or u.hostname != "px.hagstofa.is":
         raise ValueError("only https://px.hagstofa.is is allowed")
-    req = urllib.request.Request(url, data=json.dumps(body).encode() if body is not None else None,
-                                 headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.loads(r.read())
+    client = px_client()
+    if body is None:
+        return client.get_json(url)
+    return client.post_json(url, body)
 
 DBS = ["Atvinnuvegir", "Efnahagur", "Ibuar", "Samfelag", "Umhverfi"]
 def search_tables(query, lang="en"):
@@ -84,6 +96,8 @@ def search_tables(query, lang="en"):
             for t in http(root + db + "?query=" + urllib.parse.quote(query))[:5]:
                 hits.append({"id": t.get("id"), "title": t.get("title"), "score": t.get("score", 0),
                              "url": root + db + (t.get("path") or "").rstrip("/") + "/" + t.get("id", "")})
+        except PxWebError:
+            break
         except Exception:
             continue
     hits.sort(key=lambda h: -float(h.get("score") or 0))
@@ -144,8 +158,10 @@ When done: {"final":{"from_data":[{"text":"...","source":"TABLEID"}],"beyond":[{
 Rules: "from_data" holds only facts from the supplied verified answer, each with its table id. "beyond" holds context, interpretation, follow-up questions and new numbers. Every "beyond" item needs a kind: "fetched" (number from a fetch_pxweb step, give its step number), "computed" (from a calc step, give its step number), "source" (from a fetch_official page, give its step number) or "inferred" (your own interpretation or estimate). Never present inference as data. Every number in a fetched or computed item must appear in that step's result: compute any derived number (difference, ratio, percent) with calc first. Indices with different base years are not directly comparable; say so instead of comparing levels. Keep it short: at most 3 from_data and 5 beyond items. Reply in LANGUAGE."""
 
 INJECT = re.compile(r"ignore (all|previous|the above)|system prompt|api[_ ]?key|bearer\s|password", re.I)
-def redact(text):
-    text = text.replace(KEY, "[redacted]") if KEY else text
+def redact(text, cfg=None):
+    for secret in {KEY, (cfg or {}).get("key") or ""}:
+        if secret:
+            text = text.replace(secret, "[redacted]")
     return re.sub(r"\b(sk-[A-Za-z0-9]{8,}|[A-Za-z0-9_\-]{40,})\b", "[redacted]", text)
 
 ZW = ["\u200b", "\u200c"]
@@ -156,12 +172,97 @@ def watermark(text):
     return text + "\u2060" + "".join(ZW[int(b)] for b in bits)
 
 FALLBACK = os.environ.get("GRUND_ELAB_FALLBACK", "")
-def llm(messages, model=None):
+
+class ConfigError(ValueError):
+    def __init__(self, message, status=400):
+        super().__init__(message)
+        self.status = status
+
+def public_base(url):
+    """A browser-supplied endpoint must be https on a host that resolves only to
+    globally routable addresses, so the sidecar cannot be pointed at itself,
+    the host's metadata service or the private network. Returns the base and
+    the checked address the request will connect to, so a second lookup
+    (DNS rebinding) cannot move it."""
+    u = urllib.parse.urlparse(url)
+    if u.scheme != "https" or not u.hostname or u.username or u.password:
+        raise ConfigError("endpoint must be an https URL without credentials")
+    try:
+        infos = socket.getaddrinfo(u.hostname, u.port or 443, proto=socket.IPPROTO_TCP)
+    except OSError:
+        raise ConfigError("endpoint host does not resolve")
+    addresses = [info[4][0].split("%")[0] for info in infos]
+    if not addresses:
+        raise ConfigError("endpoint host does not resolve")
+    for address in addresses:
+        if not ipaddress.ip_address(address).is_global:
+            raise ConfigError("endpoint host is not a public address")
+    return url.rstrip("/"), addresses[0]
+
+def allowed_models():
+    """Models a visitor may pick on the server's own key: GRUND_LLM_MODELS,
+    comma-separated. Unset means only the server's model."""
+    return {name.strip() for name in os.environ.get("GRUND_LLM_MODELS", "").split(",") if name.strip()}
+
+def request_config(headers):
+    """Per-request endpoint from X-Grund-LLM-* headers, falling back to the
+    server default. The server key is only ever sent to the server base: a
+    browser-supplied base needs the browser's own key. On the server's key a
+    browser-supplied model is used only when the server allows it, so a
+    visitor cannot spend the server's account on any model."""
+    base = (headers.get("X-Grund-LLM-Base") or "").strip()
+    key = (headers.get("X-Grund-LLM-Key") or "").strip()
+    model = (headers.get("X-Grund-LLM-Model") or "").strip()
+    pin = None
+    if base:
+        if not key:
+            raise ConfigError("a custom endpoint needs its own API key")
+        base, pin = public_base(base)
+    else:
+        base = BASE
+    custom = bool(key)
+    ignored = ""
+    if not custom:
+        key = KEY
+        if model and model != MODEL and model not in allowed_models():
+            ignored, model = model, ""
     model = model or MODEL
+    if not (base and key and model):
+        raise ConfigError("no model endpoint is configured; add one in Extrapolate settings", 503)
+    return {"base": base, "key": key, "model": model, "custom": custom, "pin": pin,
+            "model_ignored": bool(ignored), "label": "custom" if custom else model}
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):
+        return None
+
+_OPENER = urllib.request.build_opener(_NoRedirect)
+
+class _PinnedConnection(_httpclient.HTTPSConnection):
+    """Connects to the address public_base checked, and verifies the
+    certificate against the URL's host name."""
+    pin = ""
+
+    def connect(self):
+        sock = socket.create_connection((self.pin, self.port), self.timeout)
+        self.sock = self._context.wrap_socket(sock, server_hostname=self.host)
+
+def _pinned_opener(address):
+    class Handler(urllib.request.HTTPSHandler):
+        def https_open(self, req):
+            conn = type("Pinned", (_PinnedConnection,), {"pin": address})
+            return self.do_open(conn, req, context=ssl.create_default_context())
+    # No proxy: a proxy would make its own lookup of the host.
+    return urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect, Handler)
+
+def llm(messages, model=None, cfg=None):
+    cfg = cfg or {"base": BASE, "key": KEY, "model": MODEL}
+    model = model or cfg["model"]
     body = {"model": model, "temperature": 0.1, "messages": messages}
-    req = urllib.request.Request(BASE + "/chat/completions", data=json.dumps(body).encode(),
-                                 headers={"Authorization": "Bearer " + KEY, "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+    req = urllib.request.Request(cfg["base"] + "/chat/completions", data=json.dumps(body).encode(),
+                                 headers={"Authorization": "Bearer " + cfg["key"], "Content-Type": "application/json"})
+    opener = _pinned_opener(cfg["pin"]) if cfg.get("pin") else _OPENER
+    with opener.open(req, timeout=TIMEOUT) as r:
         msg = json.loads(r.read())["choices"][0]["message"]
     text = msg.get("content") or ""
     return re.sub(r"<think>.*?</think>", "", text, flags=re.S)
@@ -180,7 +281,15 @@ def slim(answer):
         keep["source"] = {k: src.get(k) for k in list(src)[:12]}
     return keep
 
-def extrapolate(question, lang, answer):
+def extrapolate(question, lang, answer, cfg=None):
+    cfg = cfg or {"base": BASE, "key": KEY, "model": MODEL, "custom": False, "label": MODEL}
+    budget_token = push_question_budget()
+    try:
+        return _run_extrapolate(question, lang, answer, cfg)
+    finally:
+        pop_question_budget(budget_token)
+
+def _run_extrapolate(question, lang, answer, cfg):
     t0 = time.time()
     lang = "is" if lang == "is" else "en"
     verified = slim(answer)
@@ -196,15 +305,15 @@ def extrapolate(question, lang, answer):
         if time.time() - t0 > 110:
             err = "time budget used"; break
         try:
-            raw = llm(msgs)
+            raw = llm(msgs, cfg=cfg)
         except Exception as exc:
             try:
-                raw = llm(msgs)
+                raw = llm(msgs, cfg=cfg)
             except Exception as exc2:
                 err = f"model call failed: {type(exc2).__name__}"; break
-        if not raw.strip() and FALLBACK:
+        if not raw.strip() and FALLBACK and not cfg["custom"]:
             try:
-                raw = llm(msgs, FALLBACK); used_fallback = True
+                raw = llm(msgs, FALLBACK, cfg); used_fallback = True
             except Exception:
                 pass
         msgs.append({"role": "assistant", "content": raw[:3000]})
@@ -238,7 +347,7 @@ def extrapolate(question, lang, answer):
     kept = {"verified": 0, "fetched": 0, "computed": 0, "source": 0, "inferred": 0}; dropped = []
     from_data, beyond = [], []
     for it in (final.get("from_data") or [])[:5]:
-        text = redact(str(it.get("text", "")))
+        text = redact(str(it.get("text", "")), cfg)
         if INJECT.search(text): dropped.append({"text": text[:120], "why": "injection"}); continue
         bad = [n for n in nums(text) if not close(n, verified_nums)]
         if bad: dropped.append({"text": text[:160], "why": "number not in verified answer"}); continue
@@ -246,7 +355,7 @@ def extrapolate(question, lang, answer):
         from_data.append({"text": text, "source": str(it.get("source") or verified.get("table_id") or "")})
     by_n = {s["n"]: s for s in steps}
     for it in (final.get("beyond") or [])[:8]:
-        text = redact(str(it.get("text", ""))); kind = it.get("kind")
+        text = redact(str(it.get("text", "")), cfg); kind = it.get("kind")
         if INJECT.search(text): dropped.append({"text": text[:120], "why": "injection"}); continue
         if kind not in ("fetched", "computed", "source", "inferred"): dropped.append({"text": text[:160], "why": "untagged"}); continue
         step = by_n.get(it.get("step")) if kind != "inferred" else None
@@ -303,7 +412,7 @@ def extrapolate(question, lang, answer):
             else: dropped.append({"text": it["text"][:160], "why": "elab_guard"})
         from_data, beyond = keep_fd, keep_b
         try:
-            meta = {"answer": slim(answer), "model": MODEL, "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "lang": lang}
+            meta = {"answer": slim(answer), "model": cfg["label"], "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "lang": lang}
             stamp = elab_guard.watermark("", meta).strip("\n"); stamp_meta = meta
         except Exception:
             stamp = ""
@@ -313,14 +422,15 @@ def extrapolate(question, lang, answer):
     stats_dropped = len(dropped)
     stats = {"tools": len(steps), "kept": kept, "dropped": len(dropped), "guard": "elab_guard" if elab_guard else "builtin", "ms": int((time.time() - t0) * 1000)}
     rec = {"ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "q": hashlib.sha256(question.encode()).hexdigest()[:12],
-           "mode": "extrapolate", "model": MODEL, "tool_calls": len(steps), "tools": [s["tool"] for s in steps],
+           "mode": "extrapolate", "model": cfg["label"], "tool_calls": len(steps), "tools": [s["tool"] for s in steps],
            "kept": kept, "dropped": len(dropped), "ms": stats["ms"], "outcome": "error" if err else ("empty" if not (from_data or beyond) else "ok")}
     try:
         with open(LOG, "a") as f: f.write(json.dumps(rec) + "\n")
     except OSError:
         pass
-    return {"mode": "extrapolate", "label": "AI-generated", "model": MODEL, "from_data": from_data, "beyond": beyond,
-            "steps": pub_steps, "dropped": dropped, "verified_numbers": sorted(verified_nums), "stats": stats, "error": err, "stamp": stamp, "fallback_used": used_fallback}
+    return {"mode": "extrapolate", "label": "AI-generated", "model": cfg["label"], "from_data": from_data, "beyond": beyond,
+            "steps": pub_steps, "dropped": dropped, "verified_numbers": sorted(verified_nums), "stats": stats, "error": err, "stamp": stamp, "fallback_used": used_fallback,
+            "model_ignored": bool(cfg.get("model_ignored"))}
 
 def stats():
     tot = {"calls": 0, "ok": 0, "tool_calls": 0, "dropped": 0, "kept": {"verified": 0, "fetched": 0, "computed": 0, "source": 0, "inferred": 0}, "ms_sum": 0}
@@ -351,7 +461,11 @@ class H(BaseHTTPRequestHandler):
             ans = data.get("answer") or {}
             if not isinstance(ans, dict) or ans.get("refused") or not ans.get("value"):
                 return self._send(400, {"error": "extrapolate needs a verified answer"})
-            self._send(200, extrapolate(str(data.get("question", ""))[:2000], data.get("language"), ans))
+            try:
+                cfg = request_config(self.headers)
+            except ConfigError as exc:
+                return self._send(exc.status, {"error": str(exc)})
+            self._send(200, extrapolate(str(data.get("question", ""))[:2000], data.get("language"), ans, cfg))
         except Exception as exc:
             self._send(502, {"error": type(exc).__name__})
     def log_message(self, fmt, *args): pass

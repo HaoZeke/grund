@@ -24,11 +24,43 @@ def enabled() -> bool:
     return os.environ.get("GRUND_IS_KANG_BIRTHS", "0").strip().lower() in {"1", "on", "true", "yes"}
 
 
+def specific_age(question: str) -> str | None:
+    """One year of age, not a band and not a calendar year.
+
+    ``30 ára`` and ``aged 30`` name that year. ``30 to 34`` does not.
+    """
+    text = fold(question or "").replace("-", " ")
+    match = re.search(r"\b(\d{1,3})\s+ara\b", text) or re.search(r"\baged\s+(\d{1,3})\b", text)
+    if match is None:
+        match = re.search(r"\b(\d{1,3})\s+years?\s+old\b", text)
+    if match is None:
+        return None
+    number = match.group(1)
+    if re.search(rf"\b{re.escape(number)}\s+(?:to|til)\b", text):
+        return None
+    return number
+
+
+def parent_role(question: str) -> str | None:
+    """``mother`` or ``father`` when the question names that parent."""
+    text = fold(question or "")
+    if re.search(r"\b(mother|mothers|modir|modur|maedr\w*)\b", text):
+        return "mother"
+    if re.search(r"\b(father|fathers|fodur|fedra|fodr\w*)\b", text):
+        return "father"
+    return None
+
+
 def wants_births(question: str, language: str | None) -> bool:
-    """How many children were born in Iceland in one named year."""
+    """How many children were born in Iceland in one named year.
+
+    A named age or a named parent is a breakdown, not this headline total.
+    """
     if not enabled():
         return False
     if language not in {None, "", "is", "en"}:
+        return False
+    if specific_age(question) or parent_role(question):
         return False
     text = fold(question or "")
     if language == "en":
@@ -60,11 +92,31 @@ def _total_code(variable) -> str | None:
     return None
 
 
+def _age_blob(blob: str) -> bool:
+    return blob.strip() in {"aldur", "age"} or blob.startswith("aldur ") or " aldur" in blob or re.search(r"\bage\b", blob) is not None
+
+
 def birth_value_code(variable, question: str, language: str | None, title: str) -> str | None:
-    """Live births, all sexes, all pluralities. Not the stillbirth row."""
-    if not wants_births(question, language) or not _birth_title(title):
+    """Live births, all sexes, all pluralities. Not the stillbirth row.
+
+    A named year of age is that row. It is not the all-ages total.
+    """
+    if not _birth_title(title):
         return None
     blob = fold(f"{getattr(variable, 'code', '')} {getattr(variable, 'text', '')}")
+    number = specific_age(question)
+    if number and _age_blob(blob):
+        hits = []
+        for code, label in getattr(variable, "values", []) or []:
+            # The value code is a list index. The age is the number in the label.
+            numbers = re.findall(r"\d+", str(label or ""))
+            if set(numbers) == {number}:
+                hits.append(str(code))
+        if len(hits) == 1:
+            return hits[0]
+        return None
+    if not wants_births(question, language):
+        return None
     if "skipting" in blob:
         for code, label in getattr(variable, "values", []) or []:
             if fold(str(label or "")) in _LIVE:
@@ -112,7 +164,27 @@ def _live_cell(labels: list[str], year: str) -> bool:
 
 
 def birth_cell_clears(question: str, language: str | None, produced: dict, verdict: dict | None) -> bool:
-    """The live-birth total is the cell. The word fæddust is not printed on it."""
+    """The live-birth total is the cell. The word fæddust is not printed on it.
+
+    A named year of a parent's age is that breakdown cell, not the headline total.
+    """
+    age = specific_age(question)
+    parent = parent_role(question)
+    if age and parent:
+        table = produced.get("table")
+        stem = _stem(str(getattr(table, "id", "") or ""))
+        if parent == "mother" and stem != "MAN05101":
+            return False
+        if parent == "father" and stem != "MAN05102":
+            return False
+        labels: list[str] = []
+        for claim in produced.get("claims") or []:
+            if not isinstance(claim, dict):
+                continue
+            for cell in claim.get("cells") or []:
+                if isinstance(cell, dict):
+                    labels.extend(fold(str(value)) for value in (cell.get("labels") or {}).values())
+        return any(set(re.findall(r"\d+", label)) == {age} for label in labels)
     if not wants_births(question, language):
         return False
     reason = str((verdict or {}).get("reason") or "")
@@ -145,8 +217,36 @@ def birth_cell_clears(question: str, language: str | None, produced: dict, verdi
     return True
 
 
+def _keep(ranker: dict) -> dict:
+    chosen = dict(ranker)
+    source = dict(chosen.get("source") or {})
+    source["lookalike_resolved"] = True
+    source["is_births"] = True
+    chosen["source"] = source
+    return chosen
+
+
 def births_ranker(question: str, language: str | None, ranker: dict) -> dict | None:
-    """Keep the live-birth total. A stillbirth or a slice is a different statistic."""
+    """Keep the live-birth total. A stillbirth or a slice is a different statistic.
+
+    A named parent and year of age keep that breakdown cell, and only that cell.
+    The headline total is a different statistic.
+    """
+    age = specific_age(question)
+    parent = parent_role(question)
+    if age or parent:
+        if ranker.get("refused") or ranker.get("value") in (None, ""):
+            return None
+        stem = _stem(str(ranker.get("table_id") or ""))
+        if parent == "mother" and stem != "MAN05101":
+            return None
+        if parent == "father" and stem != "MAN05102":
+            return None
+        if age:
+            labels = _labels(ranker)
+            if not any(set(re.findall(r"\d+", label)) == {age} for label in labels):
+                return None
+        return _keep(ranker)
     if not wants_births(question, language):
         return None
     if ranker.get("refused") or ranker.get("value") in (None, ""):
@@ -158,16 +258,28 @@ def births_ranker(question: str, language: str | None, ranker: dict) -> dict | N
     stem = _stem(str(ranker.get("table_id") or ""))
     if stem not in {"MAN05100", "MAN05104", "MAN05102"}:
         return None
-    chosen = dict(ranker)
-    source = dict(chosen.get("source") or {})
-    source["lookalike_resolved"] = True
-    source["is_births"] = True
-    chosen["source"] = source
-    return chosen
+    return _keep(ranker)
+
+
+def _lead(catalogue, hits: list[Hit], stem: str) -> list[Hit]:
+    table = catalogue.by_id.get(stem + ".px") or catalogue.by_id.get(stem)
+    if table is None:
+        return hits
+    kept = [hit for hit in hits if _stem(hit.table.id) != stem]
+    score = max((hit.score for hit in kept), default=0.0) + 1.0
+    lead = Hit(table=table, score=score, bm25=0.0, cosine=0.0, value_boost=0.0)
+    return [lead] + kept
 
 
 def apply_is_births(catalogue, hits: list[Hit], question: str, language: str | None) -> list[Hit]:
-    """Move the live-birth total to the front when that cell binds."""
+    """Move the live-birth total to the front when that cell binds.
+
+    A named mother's or father's age leads with that breakdown table instead.
+    """
+    if specific_age(question) and parent_role(question) == "mother":
+        return _lead(catalogue, hits, "MAN05101")
+    if specific_age(question) and parent_role(question) == "father":
+        return _lead(catalogue, hits, "MAN05102")
     if not wants_births(question, language):
         return hits
     table = catalogue.by_id.get(_TABLE + ".px") or catalogue.by_id.get(_TABLE)

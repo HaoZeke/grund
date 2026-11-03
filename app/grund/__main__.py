@@ -25,7 +25,7 @@ def main(argv: list[str] | None = None) -> None:
     question = " ".join(args)
     index = Path("data/index")
     try:
-        engine = Engine(Catalogue.load(index), client=PxWebClient(cache_dir=Path("data/cache"), rate=4.0))
+        engine = Engine(Catalogue.load(index), client=PxWebClient(cache_dir=Path("data/cache")))
     except IndexOffline as exc:
         print(str(exc), file=sys.stderr)
         raise SystemExit(1) from exc

@@ -13,12 +13,14 @@ from __future__ import annotations
 
 import os
 import re
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 
 from grund_index.textutil import fold
 
 _FRAME_UNSET = object()
-_CURRENT: dict[str, object] = {"frame": _FRAME_UNSET}
+# Per request: concurrent asks on one Engine each see only their own frame.
+_CURRENT: ContextVar[object] = ContextVar("grund_frame", default=_FRAME_UNSET)
 
 
 def frame_enabled() -> bool:
@@ -26,20 +28,18 @@ def frame_enabled() -> bool:
 
 
 def current_frame() -> "QuestionFrame | None":
-    frame = _CURRENT.get("frame", _FRAME_UNSET)
+    frame = _CURRENT.get()
     if frame is _FRAME_UNSET or frame is None:
         return None
     return frame  # type: ignore[return-value]
 
 
 def push_frame(frame: "QuestionFrame | None"):
-    previous = _CURRENT.get("frame", _FRAME_UNSET)
-    _CURRENT["frame"] = frame
-    return previous
+    return _CURRENT.set(frame)
 
 
 def reset_frame(token) -> None:
-    _CURRENT["frame"] = token
+    _CURRENT.reset(token)
 
 
 _MONTHS = {
@@ -265,6 +265,33 @@ class QuestionFrame:
             return 0
         title = fold(f"{getattr(edition, 'title', '')} {' '.join(getattr(edition, 'path_texts', []) or [])}")
         score = 0
+        stem = str(getattr(table, "id", "")).removesuffix(".px")
+        try:
+            from grund.iswage import _basic, indices_kind, named_basis, wage_kind
+
+            basis = named_basis(self.text)
+            if basis == "constant":
+                if stem == "LAU04800":
+                    score += 80
+                elif stem in {"LAU04000", "LAU04001", "LAU04802"}:
+                    score -= 30
+            elif basis == "mortgage":
+                if stem == "LAU04802":
+                    score += 80
+                elif stem in {"LAU04000", "LAU04001", "LAU04800"}:
+                    score -= 30
+            elif indices_kind(self.text) or (_basic(self.text) and not indices_kind(self.text)):
+                if stem == "LAU04001":
+                    score += 80
+                elif stem == "LAU04000":
+                    score -= 30
+            elif wage_kind(self.text, self.language) in {"level", "points", "percent"}:
+                if stem == "LAU04000":
+                    score += 40
+                elif stem == "LAU04001":
+                    score -= 20
+        except Exception:
+            pass
         for hint in _MEASURE_HINTS.get(self.measure, ()):
             if hint in title:
                 score += 6
@@ -634,6 +661,32 @@ def _is_time_role(variable) -> bool:
         if re.fullmatch(r"A?(?:19|20)\d{2}(?:M\d{2}|Q\d)?", str(code), re.I):
             hits += 1
     return hits >= max(3, len(values) // 2)
+
+
+def needs_clarification(frame: QuestionFrame | None) -> str | None:
+    """A published total the question did not pin down.
+
+    A monthly index named only by a year is twelve months or an average.
+    A town headcount named only by a year is 1 January, 1 December, a
+    quarter, or a yearly average. Either one is a refusal, not a guess.
+    A named month, quarter, or 1 January still answers.
+    """
+    if frame is None or frame.blocked:
+        return None
+    folded = fold(frame.corrected or frame.text).replace("-", " ")
+    if _ambiguous_period_grain(frame, folded):
+        return "clarify_month"
+    if (
+        frame.measure == "population"
+        and frame.municipality
+        and frame.operation == "level"
+        and frame.period.kind == "point"
+        and frame.period.year
+        and not frame.period.month
+        and not frame.period.quarter
+    ):
+        return "clarify"
+    return None
 
 
 def frame_question(text: str) -> QuestionFrame:

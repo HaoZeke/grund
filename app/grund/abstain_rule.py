@@ -208,7 +208,7 @@ def abstain_for_disagreement(result: dict) -> bool:
     if result.get("refused"):
         return False
     source = result.get("source") if isinstance(result.get("source"), dict) else {}
-    if source.get("is_origin") or source.get("is_building"):
+    if source.get("is_origin") or source.get("is_building") or source.get("country_row"):
         return False
     if source.get("total_cell") and os.environ.get("GRUND_TOTAL_CELL", "").strip() == "1":
         return False

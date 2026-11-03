@@ -48,7 +48,7 @@ def main() -> None:
     questions = [json.loads(line) for line in ORG.read_text().splitlines() if line.strip()]
     engine = Engine(
         Catalogue.load(Path("data/index")),
-        client=PxWebClient(cache_dir=Path("data/cache"), rate=4.0),
+        client=PxWebClient(cache_dir=Path("data/cache")),
         planner="deterministic",
     )
     rows = []

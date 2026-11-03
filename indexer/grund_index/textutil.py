@@ -303,9 +303,17 @@ def fold(text: str) -> str:
     return stripped
 
 
+# Shorter tokens are not index evidence: in questions they are function
+# words ("of", "en", "so"), pieces of codes ("MF.7.1", "R&D") or units
+# ("MW"), and units are read with their own tokenizer (grund.unit_subject).
+# Anything that compares stems or roots against index tokens uses the same
+# floor, so a root is never shorter than a word the index would keep.
+MIN_TOKEN_LEN = 3
+
+
 def tokens(text: str, *, expand: bool = False) -> list[str]:
     found = re.findall(r"[a-z0-9]+", fold(text))
-    kept = [tok for tok in found if tok not in _STOP and (len(tok) > 2 or tok.isdigit())]
+    kept = [tok for tok in found if tok not in _STOP and (len(tok) >= MIN_TOKEN_LEN or tok.isdigit())]
     if not expand:
         return kept
     extra: list[str] = []

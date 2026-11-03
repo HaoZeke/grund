@@ -40,6 +40,8 @@ def wants_nation(question: str, language: str | None) -> bool:
     if blocks_population(question):
         return False
     text = fold(question or "")
+    if "arsfjord" in text or re.search(r"\bquarter\b", text):
+        return False
     if any(mark in text for mark in ("overnight", "gistin", "gistu", "unemploy", "atvinnu", "starfand", "launavisit", "wage", "neysluverd", "consumer price", "landsframleid", "utflutn", "innflutn", "export", "import", "birth", "night", "lodging", "naetur", "naetur")):
         return False
     if re.search(r"\b(nights?|stays?)\b", text):
@@ -119,7 +121,78 @@ def _title_ok(title: str) -> bool:
     return "kyni og aldri" in folded or "sex and age" in folded
 
 
+_QUARTER_WORD = {
+    "first": 1, "1st": 1, "fyrsta": 1, "fyrsti": 1,
+    "second": 2, "2nd": 2, "odrum": 2, "annar": 2,
+    "third": 3, "3rd": 3, "thridja": 3,
+    "fourth": 4, "4th": 4, "fjorda": 4,
+}
+
+
+def wants_quarter_population(question: str, language: str | None) -> bool:
+    """A national headcount in one quarter, not the 1 January series."""
+    if not enabled():
+        return False
+    if language not in {None, "", "is", "en"}:
+        return False
+    text = fold(question or "")
+    if "arsfjord" not in text and re.search(r"\bquarter\b", text) is None:
+        return False
+    if not any(mark in text for mark in ("mannfjold", "population", "ibuar")) and re.search(r"\bpeople\b", text) is None:
+        return False
+    if any(mark in text for mark in _BLOCK_PLACES):
+        return False
+    return _quarter_code(text) is not None
+
+
+def _quarter_code(text: str) -> str | None:
+    years = re.findall(r"(?:19|20)\d{2}", text)
+    if len(years) != 1:
+        return None
+    match = re.search(
+        r"\b(first|second|third|fourth|1st|2nd|3rd|4th|odrum|fyrsta|fyrsti|annar|thridja|fjorda)\b",
+        text,
+    )
+    if match is None or match.group(1) not in _QUARTER_WORD:
+        numbered = re.search(r"\b([1-4])\s*\.?\s*arsfjordung", text)
+        if numbered is None:
+            return None
+        quarter = numbered.group(1)
+    else:
+        quarter = str(_QUARTER_WORD[match.group(1)])
+    return f"{years[0]}Q{quarter}"
+
+
+def quarter_pop_code(variable, question: str, language: str | None, title: str) -> str | None:
+    if not wants_quarter_population(question, language):
+        return None
+    folded_title = fold(title or "")
+    if "quarter" not in folded_title and "arsfjord" not in folded_title:
+        return None
+    blob = fold(f"{getattr(variable, 'code', '')} {getattr(variable, 'text', '')}")
+    text = fold(question or "")
+    wanted = _quarter_code(text)
+    hits = []
+    for code, label in getattr(variable, "values", []) or []:
+        plain = fold(str(label or ""))
+        if wanted and (getattr(variable, "time", False) or "arsfjord" in blob or re.search(r"\bquarter\b", blob)):
+            if str(code) == wanted:
+                hits.append(str(code))
+        elif "sveitarfel" in blob or "municip" in blob:
+            if plain in {"total", "alls"}:
+                hits.append(str(code))
+        elif "kyn" in blob or "rikisfang" in blob or re.search(r"\b(sex|citizen)", blob):
+            if plain in {"total", "alls"}:
+                hits.append(str(code))
+    if len(hits) == 1:
+        return hits[0]
+    return None
+
+
 def pop_value_code(variable, question: str, language: str | None, title: str) -> str | None:
+    quarter = quarter_pop_code(variable, question, language, title)
+    if quarter is not None:
+        return quarter
     if not wants_nation(question, language) or not _title_ok(title):
         return None
     blob = fold(f"{getattr(variable, 'code', '')} {getattr(variable, 'text', '')}")
@@ -210,9 +283,12 @@ def pop_ranker(question: str, language: str | None, ranker: dict) -> dict | None
 
 
 def apply_is_pop(catalogue, hits: list[Hit], question: str, language: str | None) -> list[Hit]:
-    if not wants_nation(question, language):
+    stem = "MAN10001" if wants_quarter_population(question, language) else ""
+    if not stem and wants_nation(question, language):
+        stem = _TABLE
+    if not stem:
         return hits
-    table = catalogue.by_id.get(_TABLE + ".px") or catalogue.by_id.get(_TABLE)
+    table = catalogue.by_id.get(stem + ".px") or catalogue.by_id.get(stem)
     if table is None:
         return hits
     from grund.bind import bind
@@ -224,6 +300,11 @@ def apply_is_pop(catalogue, hits: list[Hit], question: str, language: str | None
     binding = bind(edition, parse_question(question, language or "is"))
     if binding is None:
         return hits
+    if stem == "MAN10001":
+        kept = [hit for hit in hits if _stem(hit.table.id) != stem]
+        score = max((hit.score for hit in kept), default=0.0) + 1.0
+        lead = Hit(table=table, score=score, bm25=0.0, cosine=0.0, value_boost=0.0)
+        return [lead] + kept
     picked = []
     for selection in binding.selections:
         picked.extend(str(item) for item in (selection.get("selection") or {}).get("values") or [])

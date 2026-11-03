@@ -99,7 +99,7 @@ def main() -> None:
 
     engine = Engine(
         Catalogue.load(Path("data/index")),
-        client=PxWebClient(cache_dir=Path("data/cache"), rate=4.0),
+        client=PxWebClient(cache_dir=Path("data/cache")),
         planner="deterministic",
     )
     sets = [("dev-A", _load(DEV_A)), ("dev2", _load(DEV2))]

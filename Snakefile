@@ -13,7 +13,7 @@ rule crawl:
     output:
         "data/catalog/tables.jsonl"
     shell:
-        "python -m grund_index.crawl --out {output} --cache data/cache --rate 2"
+        "python -m grund_index.crawl --out {output} --cache data/cache"
 
 
 rule index:

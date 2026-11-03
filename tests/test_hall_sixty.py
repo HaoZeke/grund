@@ -124,7 +124,7 @@ def parity():
 
     engine = Engine(
         Catalogue.load(ROOT / "data" / "index"),
-        client=PxWebClient(cache_dir=ROOT / "data" / "cache", rate=4.0),
+        client=PxWebClient(cache_dir=ROOT / "data" / "cache"),
         planner="deterministic",
     )
     questions = [json.loads(line) for line in QUESTIONS.read_text(encoding="utf-8").splitlines() if line.strip()]

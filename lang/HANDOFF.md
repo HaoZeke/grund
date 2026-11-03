@@ -105,7 +105,7 @@ from grund_lang.pxtools import MetaStore, answer
 from grund_index.client import PxWebClient
 
 store = MetaStore("data/index/tables.jsonl.gz")
-client = PxWebClient(cache_dir="data/cache", rate=2)
+client = PxWebClient(cache_dir="data/cache")
 result = answer(question, store, client, ranker=index.search, live=True)
 ```
 

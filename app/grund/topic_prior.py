@@ -46,7 +46,14 @@ _NOT_WAGE = ("overtime", "yfirvinn", "kennslu", "grunnskol")
 
 
 def enabled() -> bool:
-    """Off unless ``GRUND_TOPIC_PRIOR=1``. The default shortlist is unchanged."""
+    """Off unless ``GRUND_TOPIC_PRIOR=1``. The default shortlist is unchanged.
+
+    The engine's baseline pass turns it off for one request only.
+    """
+    from grund.request_state import current
+
+    if current().topic_prior_off:
+        return False
     return os.environ.get("GRUND_TOPIC_PRIOR", "").strip().lower() in {"1", "true", "yes"}
 
 

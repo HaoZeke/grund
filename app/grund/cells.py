@@ -507,7 +507,7 @@ def _bind_dimension(variable, text: str, span: tuple[int, int] | None = None, ti
     if named_code is not None:
         label = variable.label(named_code) if hasattr(variable, "label") else named_code
         return _choice(variable, named_code, label, "subgroup", 3.0, "question names this category")
-    if _question_forbids_total(variable, text):
+    if _question_forbids_total(variable, text, title):
         return None
     total = _best_total(values)
     if total and not _dimension_named(variable, text):
@@ -872,6 +872,18 @@ def _best_total(values: list[tuple[str, str]]) -> tuple[str, str] | None:
         if _of_which(label):
             continue
         folded = fold(label).strip()
+        words = re.findall(r"[a-z0-9]+", folded)
+        # "Samtals úrgangur" names one measure. It is not the unnamed total.
+        # "Total - all activities" and a label that ends in "total" still are.
+        if (
+            words
+            and words[0] in {"samtals", "total", "alls"}
+            and words[1] not in {"for", "fyrir"}
+            and "all" not in words[1:]
+            and not folded.endswith((" total", " alls", " samtals"))
+            and len(words) > 1
+        ):
+            continue
         # "Útflutningur alls" is the exports subtotal, not the table total.
         blocked = r"\b(innflut\w*|imported|exports?\w*|utflut\w*|erlend\w*|foreign\w*)\b"
         if re.search(r"\b(alls|total|samtals)\b", folded) and not (

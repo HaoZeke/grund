@@ -1068,6 +1068,17 @@ def promote(hits: list, table_id: str) -> list:
 
 def rerank(catalogue, question: str, hits: list, language: str = "en") -> list:
     """Move the matched table first. The binder and the rail still choose the cell."""
+    from grund.isbirths import parent_role, specific_age
+
+    parent = parent_role(question)
+    if specific_age(question) and parent in {"mother", "father"} and hits is not None:
+        stem = "MAN05101" if parent == "mother" else "MAN05102"
+        table = _table(catalogue, stem)
+        if table is not None:
+            kept = [hit for hit in hits if hit.table.id.removesuffix(".px") != stem]
+            score = max((hit.score for hit in hits), default=0.0) + 10.0
+            lead = Hit(table=table, score=score, bm25=0.0, cosine=0.0, value_boost=0.0)
+            return [lead, *kept]
     if not enabled() or not hits:
         return hits
     spec = resolve(catalogue, question, language)

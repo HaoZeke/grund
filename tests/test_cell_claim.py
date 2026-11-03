@@ -88,3 +88,21 @@ def test_the_rail_blocks_and_passes_with_the_fixture_reason():
             assert result.status == "blocked", case["id"]
             if case["reason"] in _CORE:
                 assert result.reason == case["reason"], case["id"]
+
+
+def test_born_beside_the_cells_own_measure_describes_its_members():
+    from grund_rails.cell_claim import _birth_event_missing
+
+    population = {"title": "Population by sex, age and country of birth 1998-2025", "labels": {"Country of birth": "Poland", "Year": "2025"}}
+    assert not _birth_event_missing("What was the population of people born in Poland in Iceland in 2025?", population)
+    assert _birth_event_missing("How many children were born in Iceland in 2025?", population)
+    births = {"title": "Live births by sex 1838-2025", "labels": {"Sex": "Total", "Year": "2025"}}
+    assert not _birth_event_missing("How many births were there in Iceland in 2025?", births)
+
+
+def test_the_born_word_does_not_name_the_measure_it_describes():
+    from grund_rails.cell_claim import _birth_event_missing
+
+    abroad = {"title": "Population born abroad by background, sex, age and country of birth 1996-2026", "labels": {"Background": "Immigrant", "Year": "2025"}}
+    assert _birth_event_missing("How many children were born in Iceland in 2025?", abroad)
+    assert not _birth_event_missing("How many people born abroad lived in Iceland in 2025?", abroad)

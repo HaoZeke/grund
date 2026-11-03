@@ -45,7 +45,7 @@ def get_engine() -> Engine:
         if not (INDEX / "manifest.json").exists():
             raise FileNotFoundError(f"index not built at {INDEX}")
         catalogue = Catalogue.load(INDEX)
-        _engine = Engine(catalogue, client=PxWebClient(cache_dir=ROOT / "data" / "cache", rate=4.0))
+        _engine = Engine(catalogue, client=PxWebClient(cache_dir=ROOT / "data" / "cache"))
     return _engine
 
 

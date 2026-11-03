@@ -20,7 +20,7 @@ def main() -> None:
     name, questions, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3])
     engine = Engine(
         Catalogue.load(Path("data/index")),
-        client=PxWebClient(cache_dir=Path("data/cache"), rate=4.0),
+        client=PxWebClient(cache_dir=Path("data/cache")),
         planner="deterministic",
     )
     payload = score_file(engine, questions)

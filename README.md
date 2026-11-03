@@ -42,6 +42,49 @@ The default deterministic mode needs no API key.
 
 Each answer card links back to the table on `px.hagstofa.is`.
 
+## Caching and rate limits
+
+PxWeb metadata and data queries are stored on disk and read from that cache first.
+Metadata is kept for seven days and a data query for six hours.
+Set `GRUND_PX_META_TTL` and `GRUND_PX_DATA_TTL` in seconds to change those times.
+All PxWeb calls share one limiter.
+It allows one call each ten seconds and two calls at a time.
+Statistics Iceland answered our scoring runs with HTTP 429, too many requests.
+Each of those answers asked us to retry after ten seconds, so the limiter waits ten seconds between calls.
+Each API publishes its limit at `?config`.
+English allows 100 calls per ten seconds, and Icelandic allows 300.
+Both limits count calls per IP address.
+When a 429 or 503 carries a Retry-After header, Grund waits that long.
+Otherwise the wait grows and jitters, and one question stops waiting after fifteen seconds.
+If an older copy is on disk when that limit is reached, the answer says it is cached and gives the fetch time.
+If there is no copy, the answer says Statistics Iceland is rate-limiting requests and to try again in a minute.
+`python -m grund_index.mirror` builds a dated snapshot of the catalogue under `GRUND_MIRROR_DIR`.
+That directory is not part of this repository.
+A snapshot manifest stores the table id, the PxWeb updated time, the fetch time, and a sha256.
+Grund answers from the snapshot through the same query, and the sentence shows the data-as-of date.
+The live API is used only when a table is missing or the snapshot is stale, with the same limiter.
+Table selection reads `data/index/tables.jsonl.gz`.
+That index lists every table id, title, variable and value label in both languages.
+While the index is loaded, table selection never calls the live database search.
+The optional Extrapolate sidecar uses the same cache and limiter and stops after twelve tool calls.
+
+These settings change the limiter.
+The process reads them when it starts the shared limiter or a question.
+
+| Setting | Default | Meaning |
+| --- | --- | --- |
+| `GRUND_PX_MAX_CALLS` | `1` | Calls allowed in each window. Values above 10, a tenth of the published English limit, are lowered to 10. |
+| `GRUND_PX_WINDOW` | `10` | Window length in seconds, the published `timeWindow`. |
+| `GRUND_PX_CONCURRENCY` | `2` | Calls in flight at once, at most `GRUND_PX_CONCURRENCY_MAX` (default 4, never above 10). |
+| `GRUND_PX_QUESTION_WAIT` | `15` | Seconds one question may wait for the API before it answers from the cache or says it is rate-limited. |
+| `GRUND_PX_TIMEOUT` | `60` | Seconds one HTTP call may take. |
+
+We chose the concurrency cap, the cache times, the question wait, the call timeout and the retry backoff.
+No published or measured number backs them.
+`indexer/grund_index/client.py` names each number and its setting.
+The backoff settings are `GRUND_PX_BACKOFF`, `GRUND_PX_BACKOFF_MAX`, `GRUND_PX_NETWORK_RETRY_MAX`, `GRUND_PX_PAUSE_MAX` and `GRUND_PX_ATTEMPTS`.
+
+
 ## Example questions
 
 These answer with a figure and a source card:
@@ -72,7 +115,73 @@ When it is on, each answer that is not a refusal gets an Extrapolate button.
 The button adds a separate panel, headed "Beyond the data · AI-generated", below the verified answer.
 
 The panel text comes from any OpenAI-compatible endpoint.
-Set it with `GRUND_LLM_BASE_URL`, `GRUND_LLM_MODEL`, and `GRUND_LLM_API_KEY`.
+The server default is set with `GRUND_LLM_BASE_URL`, `GRUND_LLM_MODEL`, and `GRUND_LLM_API_KEY`; all three are optional.
+If none are set and the browser sends no settings, `/agent/extrapolate` answers 503 and says to add an endpoint.
+
+Each visitor can also bring their own endpoint under "Model settings (optional)" inside the Extrapolate section.
+The panel has three optional fields: an https base URL, an API key in a password field, and a model name.
+The values stay in the browser.
+They go in `sessionStorage` by default, or in `localStorage` only when "Remember on this device" is ticked.
+Saving to one store removes the copy in the other, and Clear removes both.
+On each Extrapolate request the browser sends whichever values are set as the headers `X-Grund-LLM-Base`, `X-Grund-LLM-Key`, and `X-Grund-LLM-Model`.
+It sends them only from a secure context (an https page).
+Over plain http the panel is disabled, nothing is sent, and the page says so.
+The sidecar uses them for that request only.
+It does not write them to the decision log, which records the model as `custom`, and it redacts the key from any model text it returns.
+Blank fields fall back to the server default, so with nothing set the deployment behaves as before.
+A custom base URL must come with its own key, because the server key is never sent to a host the browser chose.
+A custom base URL must also be https and resolve only to public addresses, and redirects are not followed, so the sidecar cannot be pointed at localhost, the metadata service, or the private network.
+The request then connects to the address that was checked, with the certificate verified against the URL's host name, so a second DNS answer cannot move it (DNS rebinding).
+On the server's own key, a model name from the browser is used only when it is listed in `GRUND_LLM_MODELS` (comma-separated); otherwise the server's model is used and the reply says `model_ignored`.
+With the visitor's own key, any model name is passed through.
+No key is in the repository or the build.
+
+### Keeping the key out of the reverse proxy's logs
+
+The sidecar never logs these headers, but the web server in front of it can.
+Until the filter below is applied on a host, a request that fails there (sidecar down, dial error, timeout) can write the key to that web server's error log.
+
+Caddy logs request headers in two places, and it redacts only `Authorization`, `Cookie`, `Set-Cookie`, and `Proxy-Authorization` by default:
+
+- The access log of each site. A `log` block in the site filters only that site's access logger.
+- `http.log.error`, which writes the full request headers of every request that ends in a 5xx. It goes to the default logger, so a site `log` block does not cover it. A global `log default` filter does.
+
+Header names are logged in Go's canonical form, so `X-Grund-LLM-Key` is logged as `X-Grund-Llm-Key`.
+Both blocks are in [`deploy/Caddyfile`](deploy/Caddyfile), which is the versioned config.
+In the global options block:
+
+```caddyfile
+{
+	log default {
+		output stderr
+		level INFO
+		format filter {
+			request>headers>X-Grund-Llm-Key delete
+			request>headers>X-Grund-Llm-Base delete
+		}
+	}
+}
+```
+
+In each site:
+
+```caddyfile
+log {
+	format filter {
+		request>headers>X-Grund-Llm-Key delete
+		request>headers>X-Grund-Llm-Base delete
+	}
+}
+```
+
+Keep the level at INFO, because `reverse_proxy` logs request headers at DEBUG.
+Plain http must never proxy: the `http://IP` site in `deploy/Caddyfile` only redirects to the https host.
+[`deploy/grund-vps-remote.sh`](deploy/grund-vps-remote.sh) renders that file for a host, checks it with `caddy adapt`, refuses a plain-http site that proxies, and reloads Caddy.
+
+To check a config, run `caddy adapt --config deploy/Caddyfile --adapter caddyfile`, then `CADDY=/path/to/caddy deploy/check-caddy-logs.sh`.
+The script runs the config on local ports, forces 502s with a dummy key (one upstream drops the connection and one is not listening), and searches every log line and every file Caddy wrote for the key and the base.
+It also runs a control copy without the global block, which has to leak, so a pass means the check can see the error log.
+
 The model can call three kinds of tool:
 
 - PxWeb table search, metadata, and cell fetch, on `px.hagstofa.is` only.
@@ -389,7 +498,7 @@ Set `FASTEMBED_CACHE_PATH` to `data/models` before building or querying the e5 i
 ## Rebuild
 
 ```bash
-python -m grund_index.crawl --out data/catalog/tables.jsonl --cache data/cache --rate 2
+python -m grund_index.crawl --out data/catalog/tables.jsonl --cache data/cache
 python -m grund_index.build --catalog data/catalog/tables.jsonl --out data/index --embeddings chargram
 python -m grund_index.build --catalog data/catalog/tables.jsonl --out data/index-e5 --embeddings e5
 python -m grund_eval.generate
@@ -398,6 +507,8 @@ python -m pytest -q
 ```
 
 The crawl caches GET responses and skips URLs already in the catalogue, so it resumes.
+The crawl makes one call each ten seconds by default, the same pace as the shared limiter.
+`--rate` sets calls per second, and the crawl never goes above ten calls per ten seconds.
 Stay under the published PxWeb window (English 100 calls per 10 seconds, Icelandic 300, both capped at 100,000 cells).
 There is no v2 API.
 

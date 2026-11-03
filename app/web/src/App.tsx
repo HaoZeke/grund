@@ -17,6 +17,12 @@ import {
 } from "./card";
 import { COPY, type Language } from "./copy";
 import { EXAMPLES } from "./examples";
+import { clearSettings, isEmpty, loadSettings, saveSettings, secureContext, settingsHeaders, type LlmSettings } from "./llmSettings";
+
+function apiUrl(path: string): string {
+  const base = new URL(import.meta.env.BASE_URL, window.location.href);
+  return new URL(path.replace(/^\//, ""), base).href;
+}
 
 type AskResponse = {
   answer: string;
@@ -46,6 +52,7 @@ export default function App() {
   const [question, setQuestion] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
+  const [agentMode, setAgentMode] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const latestRef = useRef<HTMLElement>(null);
@@ -148,6 +155,17 @@ export default function App() {
         </div>
         <p className="mt-4 max-w-xl text-lg leading-snug text-[#1c1915]">{copy.deck}</p>
         <p className="mt-2 max-w-xl text-sm leading-snug text-[#3a342c]">{copy.chromeHint}</p>
+        <label className="mt-3 flex min-h-11 items-center gap-2 text-sm font-semibold text-[#1c1915]">
+          <input
+            type="checkbox"
+            className="h-4 w-4 accent-[#143d66]"
+            checked={agentMode}
+            onChange={(event) => setAgentMode(event.target.checked)}
+          />
+          {language === "is" ? "Sýna Útvíkka (gervigreind, prófun)" : "Show Extrapolate (AI-generated, beta)"}
+        </label>
+        {agentMode && <ExtraStats is={language === "is"} />}
+        {agentMode && <ExtraSettings is={language === "is"} />}
         <button
           type="button"
           className="mt-3 min-h-11 text-sm font-semibold text-[#143d66] underline decoration-[#143d66] underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#143d66]"
@@ -181,6 +199,7 @@ export default function App() {
                 </p>
               )}
               {turn.response && <Answer turn={turn.response} question={turn.question} chrome={turn.chrome} />}
+              {turn.response && agentMode && <Extrapolate turn={turn.response} question={turn.question} chrome={turn.chrome} />}
             </article>
           );
         })}
@@ -351,6 +370,281 @@ function Answer({
         </p>
       </details>
     </div>
+  );
+}
+
+type ExtraItem = { text: string; source?: string; kind?: string; step?: number | null; table?: string | null; expression?: string | null; url?: string | null };
+type ExtraStep = { n: number; tool: string; args: Record<string, unknown>; ok: boolean; result: unknown };
+type ExtraResponse = {
+  from_data: ExtraItem[];
+  beyond: ExtraItem[];
+  steps: ExtraStep[];
+  dropped: { text: string; why: string }[];
+  verified_numbers: number[];
+  stats: { tools: number; kept: Record<string, number>; dropped: number; ms: number };
+  error?: string | null;
+  stamp?: string;
+};
+
+const NUM_RE = /(-?\d[\d.,]*\d%?|\d%?)/g;
+
+function numValue(token: string): number | null {
+  let t = token.replace(/%$/, "").replace(/^[.,]+|[.,]+$/g, "");
+  if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) t = t.replace(/,/g, "");
+  else if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(t)) t = t.replace(/\./g, "").replace(",", ".");
+  else t = t.replace(",", ".");
+  const v = Number(t);
+  return Number.isFinite(v) ? v : null;
+}
+
+function MarkedText({ text, verified, is }: { text: string; verified: number[]; is: boolean }) {
+  const clean = text.replace(/[\u200b\u200c\u2060]/g, "");
+  const pieces = clean.split(NUM_RE);
+  return (
+    <>
+      {pieces.map((piece, i) => {
+        if (i % 2 === 0) return <span key={i}>{piece}</span>;
+        const v = numValue(piece);
+        const ok = v !== null && verified.some((w) => w === v || (w !== 0 && Math.abs(v - w) / Math.abs(w) < 0.0051) || Math.abs(v - w) < 0.051);
+        return ok ? (
+          <span key={i} className="num-verified font-semibold text-[#1f6b3a]" title={is ? "Í staðfesta svarinu" : "In the verified answer"}>
+            {piece}✓
+          </span>
+        ) : (
+          <span
+            key={i}
+            className="num-unverified bg-[#fbe7b5] underline decoration-dotted decoration-[#a15c00] underline-offset-2"
+            title={is ? "Óstaðfest tala" : "Unverified number"}
+          >
+            {piece}
+            <sup className="text-[#a15c00]">?</sup>
+          </span>
+        );
+      })}
+      <span aria-hidden="true" className="hidden">{text}</span>
+    </>
+  );
+}
+
+function badgeFor(item: ExtraItem, is: boolean): string {
+  if (item.kind === "fetched") return `${is ? "óstaðfest sókn" : "unverified fetch"}${item.table ? " · " + item.table : ""}`;
+  if (item.kind === "source") return is ? "heimild · island.is" : "source · island.is";
+  if (item.kind === "computed") return `${is ? "reiknað" : "computed"}${item.expression ? " · " + item.expression : ""}`;
+  return is ? "ályktun" : "inferred";
+}
+
+function ExtraStats({ is }: { is: boolean }) {
+  const [stats, setStats] = useState<{ calls: number; ok: number; tool_calls: number; dropped: number; ms_avg: number } | null>(null);
+  useEffect(() => {
+    fetch(apiUrl("agent/stats"))
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setStats)
+      .catch(() => setStats(null));
+  }, []);
+  if (!stats) return null;
+  return (
+    <p className="mt-1 text-xs text-[#6b6257]">
+      {is ? "Útvíkkanir" : "Extensions"} {stats.calls} · {is ? "tókust" : "ok"} {stats.ok} · {is ? "tólaköll" : "tool calls"} {stats.tool_calls} ·{" "}
+      {is ? "fellt út" : "dropped"} {stats.dropped} · {is ? "meðaltími" : "avg"} {(stats.ms_avg / 1000).toFixed(1)} s · {is ? "hvaða OpenAI-samhæfður endapunktur sem er" : "any OpenAI-compatible endpoint"}
+    </p>
+  );
+}
+
+function ExtraSettings({ is }: { is: boolean }) {
+  const [settings, setSettings] = useState<LlmSettings>(() => loadSettings());
+  const [saved, setSaved] = useState(false);
+  const secure = secureContext();
+  const field = "mt-1 h-10 text-sm";
+  function update(patch: Partial<LlmSettings>) {
+    setSettings((current) => ({ ...current, ...patch }));
+    setSaved(false);
+  }
+  return (
+    <details className="ask-extra-settings mt-1 max-w-xl text-sm text-[#1c1915]">
+      <summary className="min-h-11 cursor-pointer font-semibold text-[#143d66]">
+        {is ? "Stillingar líkans (valfrjálst)" : "Model settings (optional)"}
+        {!isEmpty(settings) && <span className="ml-2 text-xs font-normal text-[#6b6257]">{is ? "eigin endapunktur" : "own endpoint"}</span>}
+      </summary>
+      <form
+        className="mt-2 flex flex-col gap-2"
+        autoComplete="off"
+        onSubmit={(event) => {
+          event.preventDefault();
+          saveSettings(settings);
+          setSaved(true);
+        }}
+      >
+        {!secure && (
+          <p role="alert" className="ask-extra-insecure border-l-4 border-[#8f1d2c] bg-[#fbe9ec] px-2 py-1 text-xs font-semibold text-[#8f1d2c]">
+            {is
+              ? "Þessi síða er ekki á https. Stillingar líkans eru óvirkar og engin þeirra er send, því lykillinn færi ódulkóðaður. Opnaðu síðuna á https-slóðinni."
+              : "This page is not on https. Model settings are disabled and none of them is sent, because the key would travel in cleartext. Open the page at its https address."}
+          </p>
+        )}
+        <p className="text-xs text-[#6b6257]">
+          {is
+            ? "Autt notar sjálfgefinn endapunkt þjónsins. Gildin eru aðeins geymd í þessum vafra og send sem haus með hverri Útvíkka-beiðni, og aðeins yfir https. Hliðarþjónustan skráir þau hvorki né geymir; vefþjónninn fyrir framan hana gerir það ekki heldur þegar hann keyrir síuna sem fylgir deploy/Caddyfile."
+            : "Leave blank to use the server default. Values are kept only in this browser and sent as headers with each Extrapolate request, over https only. The sidecar neither logs nor stores them; the web server in front of it does not either when it runs the filter shipped in deploy/Caddyfile."}
+        </p>
+        <fieldset disabled={!secure} className="flex flex-col gap-2 disabled:opacity-60">
+          <label className="flex flex-col font-semibold">
+            {is ? "Grunnslóð endapunkts (OpenAI-samhæfður, https)" : "Endpoint base URL (OpenAI-compatible, https)"}
+            <Input className={field} type="url" inputMode="url" spellCheck={false} placeholder="https://api.example.com/v1" value={settings.base} onChange={(event) => update({ base: event.target.value })} />
+          </label>
+          <label className="flex flex-col font-semibold">
+            {is ? "API-lykill" : "API key"}
+            <Input className={field} type="password" autoComplete="off" spellCheck={false} value={settings.key} onChange={(event) => update({ key: event.target.value })} />
+          </label>
+          <label className="flex flex-col font-semibold">
+            {is ? "Heiti líkans" : "Model name"}
+            <Input className={field} type="text" autoComplete="off" spellCheck={false} value={settings.model} onChange={(event) => update({ model: event.target.value })} />
+          </label>
+          <label className="flex min-h-11 items-center gap-2">
+            <input type="checkbox" className="h-4 w-4 accent-[#143d66]" checked={settings.remember} onChange={(event) => update({ remember: event.target.checked })} />
+            {is ? "Muna á þessu tæki (localStorage)" : "Remember on this device (localStorage)"}
+          </label>
+        </fieldset>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button type="submit" className="min-h-11" disabled={!secure}>
+            {is ? "Vista" : "Save"}
+          </Button>
+          <button
+            type="button"
+            className="min-h-11 border border-[#143d66] px-3 font-semibold text-[#143d66]"
+            onClick={() => {
+              clearSettings();
+              setSettings(loadSettings());
+              setSaved(false);
+            }}
+          >
+            {is ? "Hreinsa" : "Clear"}
+          </button>
+          {saved && (
+            <span role="status" className="text-xs text-[#1f6b3a]">
+              {settings.remember ? (is ? "Vistað á þessu tæki." : "Saved on this device.") : is ? "Vistað fyrir þessa lotu." : "Saved for this session."}
+            </span>
+          )}
+        </div>
+      </form>
+    </details>
+  );
+}
+
+function Extrapolate({ turn, question, chrome }: { turn: AskResponse; question: string; chrome: Language }) {
+  const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
+  const [data, setData] = useState<ExtraResponse | null>(null);
+  const [failure, setFailure] = useState("");
+  const [withheld, setWithheld] = useState(false);
+  const is = chrome === "is";
+  if (turn.refused || !turn.value) return null;
+  async function run() {
+    setState("busy");
+    setWithheld(!secureContext() && !isEmpty(loadSettings()));
+    try {
+      const response = await fetch(apiUrl("agent/extrapolate"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...settingsHeaders(loadSettings()) },
+        body: JSON.stringify({ question, language: chrome, answer: turn }),
+      });
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(body?.error || `HTTP ${response.status}`);
+      }
+      setData((await response.json()) as ExtraResponse);
+      setState("done");
+    } catch (error) {
+      setFailure(error instanceof Error ? error.message : "");
+      setState("error");
+    }
+  }
+  if (state === "idle") {
+    return (
+      <button
+        type="button"
+        className="self-start min-h-11 border border-[#143d66] px-3 text-sm font-semibold text-[#143d66] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#143d66]"
+        onClick={() => void run()}
+      >
+        {is ? "Útvíkka" : "Extrapolate"}
+      </button>
+    );
+  }
+  const verified = data?.verified_numbers || [];
+  return (
+    <section className="ask-turn--extra min-w-0 border-2 border-dashed border-[#a15c00] bg-[#fdf6e3] px-3 py-3 text-sm text-[#3a342c]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#a15c00]">
+        {is ? "Handan gagnanna · gervigreind" : "Beyond the data · AI-generated"}
+      </p>
+      {state === "busy" && <p className="mt-2">{is ? "Útvíkka út frá staðfestu gögnunum…" : "Extending from the verified data…"}</p>}
+      {withheld && (
+        <p role="alert" className="mt-2 text-xs font-semibold text-[#8f1d2c]">
+          {is
+            ? "Stillingar líkans voru ekki sendar: síðan er ekki á https. Sjálfgefinn endapunktur þjónsins var notaður."
+            : "Your model settings were not sent: this page is not on https. The server default was used."}
+        </p>
+      )}
+      {state === "error" && <p className="mt-2 text-[#8f1d2c]">{is ? "Útvíkkun tókst ekki." : "The extension did not finish."}{failure ? ` ${failure}` : ""}</p>}
+      {state === "done" && data && (
+        <div className="mt-2 flex flex-col gap-3">
+          {data.from_data.length > 0 && (
+            <div>
+              <h3 className="font-semibold text-[#1c1915]">{is ? "Úr gögnunum" : "From the data"}</h3>
+              <ul className="mt-1 list-disc pl-5">
+                {data.from_data.map((item, i) => (
+                  <li key={i} className="break-anywhere">
+                    <MarkedText text={item.text} verified={verified} is={is} /> <span className="text-xs text-[#6b6257]">[{item.source}]</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {data.beyond.length > 0 && (
+            <div>
+              <h3 className="font-semibold text-[#1c1915]">{is ? "Handan gagnanna" : "Beyond the data"}</h3>
+              <ul className="mt-1 list-disc pl-5">
+                {data.beyond.map((item, i) => (
+                  <li key={i} className="break-anywhere">
+                    <MarkedText text={item.text} verified={verified} is={is} />{" "}
+                    {item.kind === "source" && item.url ? (
+                      <a className="whitespace-nowrap border border-[#143d66] px-1 text-[11px] font-semibold text-[#143d66] underline" href={item.url} target="_blank" rel="noreferrer">
+                        {badgeFor(item, is)}
+                      </a>
+                    ) : (
+                      <span className="whitespace-nowrap border border-[#a15c00] px-1 text-[11px] font-semibold text-[#a15c00]">{badgeFor(item, is)}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {data.from_data.length === 0 && data.beyond.length === 0 && <p>{is ? "Ekkert stóðst skoðun." : "Nothing passed the checks."}</p>}
+          {data.steps.length > 0 && (
+            <details>
+              <summary className="min-h-11 cursor-pointer font-semibold text-[#143d66]">
+                {is ? "Skref" : "Steps"} ({data.steps.length})
+              </summary>
+              <ol className="mt-1 list-decimal pl-5 font-mono text-xs">
+                {data.steps.map((step) => (
+                  <li key={step.n} className="break-anywhere">
+                    {step.tool} {JSON.stringify(step.args)} → {typeof step.result === "string" ? step.result.slice(0, 240) : JSON.stringify(step.result)}
+                  </li>
+                ))}
+              </ol>
+            </details>
+          )}
+          <p className="text-xs text-[#6b6257]">
+            {is ? "Tól" : "Tools"} {data.stats.tools} · {is ? "staðfestar" : "verified"} {data.stats.kept.verified || 0} · {is ? "merktar" : "marked"}{" "}
+            {(data.stats.kept.fetched || 0) + (data.stats.kept.computed || 0) + (data.stats.kept.source || 0) + (data.stats.kept.inferred || 0)} · {is ? "fellt út" : "dropped"} {data.stats.dropped} ·{" "}
+            {(data.stats.ms / 1000).toFixed(1)} s
+          </p>
+        </div>
+      )}
+      {data?.stamp && <p className="mt-2 text-xs font-semibold text-[#a15c00]">{data.stamp}</p>}
+      <p className="mt-2 text-xs text-[#6b6257]">
+        {is
+          ? "Staðfesta svarið hér að ofan breytist ekki. Tölur merktar ? eru ekki staðfestar."
+          : "The verified answer above does not change. Numbers marked ? are not verified."}
+      </p>
+    </section>
   );
 }
 

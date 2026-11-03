@@ -194,7 +194,7 @@ def main() -> None:
 
     engine = Engine(
         Catalogue.load(ROOT / "data" / "index"),
-        client=PxWebClient(cache_dir=ROOT / "data" / "cache", rate=4.0),
+        client=PxWebClient(cache_dir=ROOT / "data" / "cache"),
         planner="deterministic",
     )
     STORE.mkdir(parents=True, exist_ok=True)

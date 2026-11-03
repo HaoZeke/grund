@@ -1027,7 +1027,12 @@ def _table_family(cell: dict) -> str | None:
         and ("building cost" in title or "construction cost" in title)
     ):
         return "building"
-    if "launavisital" in title or "wage index" in title:
+    if (
+        "launavisit" in title
+        or "visitolur launa" in title
+        or "wage index" in title
+        or "wage indices" in title
+    ):
         return "wage"
     if "vinnuafl" in title or "labour force" in title:
         return "labour"
@@ -1067,10 +1072,10 @@ def _subject_mismatch(question: str, cell: dict) -> bool:
 
 def _unqualified_wage_index(question: str) -> bool:
     """A bare wage index. Real, constant-price, or mortgage series are named."""
-    asked = fold(question)
+    asked = fold(question).replace("-", " ")
     if "launavisital" not in asked and "wage index" not in asked:
         return False
-    if re.search(r"\b(real|raun)\b", asked) or "fast verdlag" in asked or "constant price" in asked:
+    if re.search(r"\b(real|raun)\b", asked) or "fast verdlag" in asked or "fostu verd" in asked or "constant price" in asked:
         return False
     if any(word in asked for word in ("greidslu", "jofnun", "mortgage", "adjustment")):
         return False
@@ -1397,18 +1402,35 @@ def _first_born_only(question: str, cell: dict) -> bool:
     return re.search(r"\b(first born|frumburd\w*)\b", blob) is not None
 
 
+def _names_cell_measure(question: str, cell: dict, describing: re.Pattern) -> bool:
+    """The question writes what the cell's table counts, its title up to
+    "by" / "eftir", directly or through the shared synonyms ("living",
+    "íbúar" are "population", "mannfjöldi"). "Born" beside that measure
+    describes its members by birthplace, so a word ``describing`` matches
+    never names the measure: "Population born abroad" does not carry "how
+    many children were born", where "children" also expands to "born"."""
+    from grund_index.textutil import tokens
+
+    measure = re.split(r"\b(?:by|eftir)\b", fold(str(cell.get("title") or "")), maxsplit=1)[0]
+    counted = {word for word in tokens(measure) if not any(ch.isdigit() for ch in word) and not describing.fullmatch(word)}
+    asked = {word for word in tokens(question, expand=True) if not describing.fullmatch(word)}
+    return bool(counted & asked)
+
+
 def _birth_event_missing(question: str, cell: dict) -> bool:
     """A count of births is not a count of people by country of birth.
 
     The measure noun (births, fæðingar, fædd) has to be its own word on the
     cell. ``fæðingarland`` is the birthplace dimension, not that noun.
     """
+    from grund.sibling_measure import _clauses
+
     asked = fold(question)
-    event = bool(re.search(r"\b(births|faedingar|faeddir|faeddar|faeddust|faeddist)\b", asked))
-    event = event or (
-        re.search(r"\b(children|born)\b", asked) is not None
-        and re.search(r"\bborn\b", asked) is not None
-        and re.search(r"\b(lived|live|living|population)\b", asked) is None
+    born = re.compile(r"\b(born|faeddir|faeddar)\b")
+    event = bool(re.search(r"\b(births|faedingar|faeddust|faeddist)\b", asked))
+    event = event or any(
+        born.search(fold(clause)) is not None and not _names_cell_measure(clause, cell, born)
+        for clause in _clauses(question)
     )
     if not event:
         return False
@@ -1425,7 +1447,7 @@ def _not_headline_series(question: str, cell: dict) -> bool:
     ex-housing index or the harmonised index. ``gistinætur`` is all
     registered accommodation unless the question says hotel.
     """
-    asked = fold(question)
+    asked = fold(question).replace("-", " ")
     title = fold(str(cell.get("title") or ""))
     labels = fold(_label_values(cell))
     blob = f"{title} {labels}"
@@ -1485,6 +1507,28 @@ def _not_headline_series(question: str, cell: dict) -> bool:
 
 def _alls_for_named_category(question: str, cell: dict) -> bool:
     """Alls is not a stand-in for a category the question named."""
+    from grund.isbirths import parent_role, specific_age
+
+    age = specific_age(question)
+    parent = parent_role(question)
+    if age or parent:
+        labels = cell.get("labels") or {}
+        age_ok = False
+        for key, value in labels.items():
+            if not re.search(r"\b(aldur|age)\b", fold(str(key))):
+                continue
+            numbers = set(re.findall(r"\d+", fold(str(value))))
+            if age and numbers == {age}:
+                age_ok = True
+            elif _is_total(fold(str(value))):
+                return True
+        if age and not age_ok:
+            return True
+        table = str(cell.get("table_id") or cell.get("table") or "").upper().removesuffix(".PX")
+        if parent == "mother" and table and table != "MAN05101":
+            return True
+        if parent == "father" and table and table != "MAN05102":
+            return True
     asked = fold(question)
     labels = cell.get("labels") or {}
     if re.search(r"\bfyrsta\s+ari\w*\b", asked):
@@ -1499,8 +1543,42 @@ def _alls_for_named_category(question: str, cell: dict) -> bool:
     return False
 
 
+def _wrong_wage_series(question: str, cell: dict) -> bool:
+    """The 1989 wage index and the 2015 indices are different series.
+
+    A bare "what was the wage index" is the 1989 table. A named value, a
+    bare index name, or the annual percent is the wage-index row on the
+    2015 table. Basic wages without the word value are that table's other row.
+    """
+    table = str(cell.get("table_id") or cell.get("table") or "").upper().removesuffix(".PX")
+    try:
+        from grund.iswage import _basic, enabled, indices_kind, named_basis, wage_kind
+    except Exception:
+        return False
+    if not enabled():
+        return False
+    basis = named_basis(question)
+    if basis == "constant":
+        return table in {"LAU04000", "LAU04001", "LAU04802"}
+    if basis == "mortgage":
+        return table in {"LAU04000", "LAU04001", "LAU04800"}
+    if table not in {"LAU04000", "LAU04001"}:
+        return False
+    asked = fold(question)
+    if "wage index" not in asked and "launavisit" not in asked and "basic wage" not in asked and "grunnlaun" not in asked:
+        return False
+    if indices_kind(question) or (_basic(question) and not indices_kind(question)):
+        return table != "LAU04001"
+    language = "is" if any(ch in (question or "") for ch in "áéíóúýþðæö") else "en"
+    if wage_kind(question, language) in {"level", "points", "percent"}:
+        return table != "LAU04000"
+    return False
+
+
 def _question_measure_conflict(question: str, cell: dict) -> bool:
     """The cited unit and kind have to be the measure the question asked for."""
+    if _wrong_wage_series(question, cell):
+        return True
     if _period_unaccounted(question, cell) or _region_unaccounted(question, cell):
         return True
     if _not_headline_series(question, cell) or _alls_for_named_category(question, cell):

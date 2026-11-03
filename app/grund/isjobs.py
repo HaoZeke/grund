@@ -36,6 +36,39 @@ def enabled() -> bool:
     return os.environ.get("GRUND_IS_KANG_JOBS", "0").strip().lower() in {"1", "on", "true", "yes"}
 
 
+def survey_unemployment(question: str, language: str | None) -> bool:
+    """The annual labour-force survey, not the quarterly rate.
+
+    A quarter in the question stays on the quarterly table. A year of the
+    survey names the annual rate, both sexes, ages 16-74.
+    """
+    if not enabled():
+        return False
+    if language not in {None, "", "is", "en"}:
+        return False
+    text = fold(question or "").replace("-", " ")
+    if re.search(r"\b(quarter|arsfjord\w*)\b", text):
+        return False
+    if (
+        "labour force survey" not in text
+        and "labor force survey" not in text
+        and "vinnumarkadsrannsokn" not in text
+    ):
+        return False
+    if "unemployment" not in text and "atvinnuleys" not in text:
+        return False
+    return len(re.findall(r"(?:19|20)\d{2}", question or "")) == 1
+
+
+def _kind(question: str, language: str | None) -> str | None:
+    kind = wants_jobs(question, language)
+    if kind:
+        return kind
+    if survey_unemployment(question, language):
+        return "unemployment"
+    return None
+
+
 def wants_jobs(question: str, language: str | None) -> str | None:
     """National Icelandic level: unemployment, participation, or employed."""
     if not enabled():
@@ -103,7 +136,10 @@ def _cell_is_measure(question: str, kind: str, result: dict) -> bool:
     if any(label in {"karlar", "konur", "men", "women"} for label in labels):
         return False
     if kind == "unemployment":
-        return any("atvinnuleysi" in label and "thattaka" not in label for label in labels)
+        return any(
+            ("atvinnuleysi" in label or "unemployment rate" in label) and "thattaka" not in label
+            for label in labels
+        )
     if kind == "participation":
         return any("atvinnuthatttaka" in label for label in labels)
     if kind == "employed":
@@ -123,12 +159,12 @@ def _title_ok(title: str, kind: str) -> bool:
     folded = fold(title or "")
     if kind == "employed":
         return "starfandi" in folded and "fjoldi" in folded
-    return "atvinnuleys" in folded or "atvinnuthatttaka" in folded
+    return "atvinnuleys" in folded or "atvinnuthatttaka" in folded or "unemployment" in folded
 
 
 def labour_value_code(variable, question: str, language: str | None, title: str) -> str | None:
     """The national annual measure, both sexes, ages 16-74."""
-    kind = wants_jobs(question, language)
+    kind = _kind(question, language)
     if kind is None or not _title_ok(title, kind):
         return None
     blob = fold(f"{getattr(variable, 'code', '')} {getattr(variable, 'text', '')}")
@@ -136,8 +172,9 @@ def labour_value_code(variable, question: str, language: str | None, title: str)
     for code, label in getattr(variable, "values", []) or []:
         folded = fold(f"{code} {label}")
         plain = fold(str(label or ""))
-        if "hlutfall" in blob:
-            if kind == "unemployment" and "atvinnuleysi" in plain and "thattaka" not in plain:
+        if "hlutfall" in blob or re.search(r"\brate\b", blob):
+            rate = "atvinnuleysi" in plain or "unemployment rate" in plain
+            if kind == "unemployment" and rate and "thattaka" not in plain:
                 hits.append(str(code))
             elif kind == "participation" and "atvinnuthatttaka" in plain:
                 hits.append(str(code))
@@ -159,7 +196,7 @@ def labour_value_code(variable, question: str, language: str | None, title: str)
 
 
 def apply_is_jobs(catalogue, hits: list[Hit], question: str, language: str | None) -> list[Hit]:
-    kind = wants_jobs(question, language)
+    kind = _kind(question, language)
     if kind is None:
         return hits
     stem = "VIN00931" if kind == "employed" else "VIN00911"
@@ -174,12 +211,21 @@ def apply_is_jobs(catalogue, hits: list[Hit], question: str, language: str | Non
     return [lead] + kept
 
 
+def _stem_id(result: dict) -> str:
+    return str(result.get("table_id") or "").removesuffix(".px")
+
+
 def job_ranker(question: str, language: str | None, ranker: dict) -> dict | None:
     """Keep the ranker's labour-force cell when hybrid states another series."""
     kind = wants_jobs(question, language)
+    survey = survey_unemployment(question, language)
+    if kind is None and survey:
+        kind = "unemployment"
     if kind is None:
         return None
     if ranker.get("refused") or ranker.get("value") in (None, ""):
+        return None
+    if survey and _stem_id(ranker) != "VIN00911":
         return None
     if not _cell_is_measure(question, kind, ranker):
         return None
